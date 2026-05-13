@@ -31,6 +31,7 @@
   .rc-badge { font-size:10px; font-weight:500; padding:2px 8px; border-radius:3px; letter-spacing:0.04em; }
   .rc-badge.latest-badge { background:var(--blue-light); color:var(--blue); }
   .rc-badge.final { background:var(--teal-light); color:var(--teal); }
+  .rc-badge.midmonth { background:#FBF2E1; color:#B87A1A; border:1px solid #FAC775; }
   .rc-arrow { font-size:18px; color:var(--blue); opacity:0.5; transition:opacity 0.15s; }
   .report-card:hover .rc-arrow { opacity:1; }
   .coming-soon { background:var(--gray-100); border:1px dashed var(--gray-200); border-radius:10px; padding:18px 22px; display:flex; align-items:center; justify-content:space-between; color:var(--gray-600); }
@@ -52,10 +53,18 @@
     <div class="year-label">2026</div>
     <div class="report-list">
 
-      <a class="report-card latest" href="GateHouse_Apr2026_Final.html">
+      <a class="report-card latest" href="GateHouse_May2026_MidMonth.html">
+        <div class="rc-left">
+          <div class="rc-month">May 2026</div>
+          <span class="rc-badge latest-badge">Latest</span>
+          <span class="rc-badge midmonth">Mid-Month</span>
+        </div>
+        <div class="rc-arrow">&#8599;</div>
+      </a>
+
+      <a class="report-card" href="GateHouse_Apr2026_Final.html">
         <div class="rc-left">
           <div class="rc-month">April 2026</div>
-          <span class="rc-badge latest-badge">Latest</span>
           <span class="rc-badge final">Final</span>
         </div>
         <div class="rc-arrow">&#8599;</div>
@@ -79,7 +88,7 @@
 
       <div class="coming-soon">
         <div class="rc-left">
-          <div class="cs-month">May 2026</div>
+          <div class="cs-month">June 2026</div>
           <span class="cs-label">Coming next month</span>
         </div>
       </div>
