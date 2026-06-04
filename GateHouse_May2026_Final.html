@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gate House Strategies — Engagement Report · May 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  :root {
+    --navy:#0D2240; --blue:#1B5FA6; --blue-light:#EBF2FA;
+    --teal:#0F6E56; --teal-light:#E4F3EE;
+    --amber:#B87A1A; --amber-light:#FBF2E1;
+    --red:#A32D2D; --red-light:#FAEAEA;
+    --green:#2E7D32; --green-light:#E8F5E9;
+    --gray-100:#F5F4F1; --gray-200:#E8E7E3; --gray-400:#B0AFA9; --gray-600:#6B6A66;
+    --white:#FFFFFF; --text:#1A1A18;
+  }
+  @media print {
+    body { -webkit-print-color-adjust:exact; print-color-adjust:exact; background:white; }
+    .no-print { display:none !important; }
+    .page { box-shadow:none !important; margin:0 !important; max-width:100% !important; padding:36px 44px !important; }
+    .term .tip { display:none !important; }
+  }
+  body { font-family:'DM Sans',sans-serif; background:var(--gray-100); color:var(--text); font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  .page { max-width:1100px; margin:32px auto; background:var(--white); box-shadow:0 4px 40px rgba(0,0,0,0.08); padding:44px 52px; }
+  .header { display:flex; align-items:flex-end; justify-content:space-between; padding-bottom:16px; border-bottom:2px solid var(--navy); margin-bottom:28px; }
+  .hdr-eyebrow { font-size:11px; font-weight:500; letter-spacing:0.13em; text-transform:uppercase; color:var(--blue); margin-bottom:4px; }
+  .hdr-title { font-family:'Playfair Display',serif; font-size:28px; font-weight:400; color:var(--navy); }
+  .hdr-right { text-align:right; }
+  .hdr-period { font-family:'Playfair Display',serif; font-size:22px; color:var(--navy); }
+  .hdr-note { font-size:11px; color:var(--gray-600); margin-top:3px; line-height:1.6; }
+  .final-badge { display:inline-block; background:var(--teal-light); color:var(--teal); font-size:10px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; padding:3px 8px; border-radius:4px; border:1px solid #9fd4c4; margin-top:5px; }
+  .narrative { background:var(--navy); border-radius:8px; padding:14px 18px; margin-bottom:24px; color:rgba(255,255,255,0.87); font-size:13px; line-height:1.75; }
+  .narrative strong { color:#fff; font-weight:500; }
+  .section { margin-bottom:26px; }
+  .sec-header { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .sec-label { font-size:11px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--navy); white-space:nowrap; }
+  .sec-line { flex:1; height:1px; background:var(--gray-200); }
+  .sec-tag { font-size:11px; font-weight:500; white-space:nowrap; padding:2px 7px; border-radius:3px; }
+  .tag-amber { background:var(--amber-light); color:var(--amber); }
+  .tag-green { background:var(--green-light); color:var(--green); }
+  .tag-blue  { background:var(--blue-light);  color:var(--blue); }
+  .tag-red   { background:var(--red-light);   color:var(--red); }
+  .divider { border:none; border-top:1px solid var(--gray-200); margin:22px 0; }
+  .metric-block { margin-bottom:10px; }
+  .metric-row { display:grid; gap:10px; }
+  .row-4 { grid-template-columns:repeat(4,1fr); }
+  .row-5 { grid-template-columns:repeat(5,1fr); }
+  .row-6 { grid-template-columns:repeat(6,1fr); }
+  .row-label { font-size:10px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; color:var(--gray-400); margin-bottom:5px; padding-left:2px; }
+  .yoy-spacer { margin-top:6px; }
+  .mc { background:var(--gray-100); border:1px solid var(--gray-200); border-radius:7px; padding:11px 13px; }
+  .mc.b-blue { border-left:3px solid var(--blue); }
+  .mc.b-navy { border-left:3px solid var(--navy); }
+  .mc.b-teal { border-left:3px solid var(--teal); }
+  .mc.b-teal.highlight { background:var(--teal-light); border-color:#9fd4c4; }
+  .mc.b-teal.highlight .mv { font-size:28px; color:var(--teal); }
+  .mc.b-teal.highlight .ml { color:var(--teal); }
+  .mc-yoy { background:var(--blue-light); border:1px solid #C8DCEF; border-radius:7px; padding:9px 13px; }
+  .ml  { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.06em; color:var(--gray-600); margin-bottom:4px; }
+  .ml-yoy { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.06em; color:#3a6fa0; margin-bottom:3px; }
+  .mv  { font-family:'Playfair Display',serif; font-size:23px; font-weight:400; color:var(--navy); line-height:1.1; }
+  .mv-yoy { font-size:16px; font-weight:500; color:var(--navy); line-height:1.1; }
+  .md  { display:inline-flex; align-items:center; font-size:11px; font-weight:500; padding:2px 6px; border-radius:3px; margin-top:4px; gap:2px; }
+  .md-yoy { display:inline-flex; align-items:center; font-size:11px; color:var(--blue); margin-top:3px; font-weight:500; }
+  .up   { background:var(--teal-light); color:var(--teal); }
+  .dn   { background:var(--red-light);  color:var(--red); }
+  .nt   { background:var(--gray-100);   color:var(--gray-600); border:1px solid var(--gray-200); }
+  .warn { background:var(--amber-light);color:var(--amber); }
+  .target-row { display:flex; align-items:center; gap:4px; margin-top:4px; }
+  .tbadge { font-size:10px; padding:1px 5px; border-radius:3px; font-weight:500; }
+  .on-t  { background:var(--green-light); color:var(--green); }
+  .off-t { background:var(--red-light);   color:var(--red); }
+  .tlbl  { font-size:10px; color:var(--gray-600); }
+  .term { cursor:help; border-bottom:1px dotted var(--gray-400); position:relative; display:inline-block; }
+  .term .tip { visibility:hidden; opacity:0; transition:opacity 0.15s; position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:var(--navy); color:#fff; font-size:11px; line-height:1.5; padding:7px 10px; border-radius:6px; width:220px; text-align:left; z-index:200; pointer-events:none; box-shadow:0 4px 16px rgba(0,0,0,0.2); white-space:normal; text-transform:none; letter-spacing:0; font-weight:400; }
+  .term .tip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color:var(--navy); }
+  .term:hover .tip { visibility:visible; opacity:1; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:12px; }
+  .cc { background:var(--white); border:1px solid var(--gray-200); border-radius:10px; padding:14px 16px; }
+  .ct { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.07em; color:var(--gray-600); margin-bottom:10px; }
+  .ptable { width:100%; border-collapse:collapse; font-size:12px; }
+  .ptable th { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.06em; color:var(--gray-600); padding:5px 7px; border-bottom:1px solid var(--gray-200); text-align:left; }
+  .ptable td { padding:6px 7px; border-bottom:1px solid var(--gray-200); color:var(--text); vertical-align:middle; line-height:1.35; }
+  .ptable tr:last-child td { border-bottom:none; }
+  .ptable td.r { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .rnk { display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; border-radius:50%; font-size:9px; font-weight:500; flex-shrink:0; }
+  .rnk-t { background:var(--teal-light); color:var(--teal); }
+  .rnk-b { background:var(--red-light);  color:var(--red); }
+  .post-link { color:var(--blue); text-decoration:none; font-size:12px; }
+  .post-link:hover { text-decoration:underline; }
+  .ltable { width:100%; border-collapse:collapse; font-size:12px; }
+  .ltable th { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.06em; color:var(--gray-600); padding:5px 7px; border-bottom:1px solid var(--gray-200); text-align:left; }
+  .ltable td { padding:5px 7px; border-bottom:1px solid var(--gray-200); color:var(--text); vertical-align:middle; }
+  .ltable tr:last-child td { border-bottom:none; }
+  .ltable td.r { text-align:right; font-variant-numeric:tabular-nums; }
+  .bar-bg   { background:var(--gray-200); border-radius:2px; height:5px; width:100%; min-width:40px; }
+  .bar-fill { background:var(--blue); height:5px; border-radius:2px; }
+  .callout-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:10px; }
+  .callout { border-radius:7px; padding:11px 13px; font-size:13px; line-height:1.55; }
+  .c-green { background:var(--teal-light);  border:1px solid #9FE1CB; }
+  .c-amber { background:var(--amber-light); border:1px solid #FAC775; }
+  .c-blue  { background:var(--blue-light);  border:1px solid #C8DCEF; }
+  .c-red   { background:var(--red-light);   border:1px solid #E8A8A8; }
+  .clbl { font-weight:500; font-size:11px; text-transform:uppercase; letter-spacing:0.07em; margin-bottom:4px; }
+  .c-green .clbl { color:var(--teal); }
+  .c-amber .clbl { color:var(--amber); }
+  .c-blue  .clbl { color:var(--blue); }
+  .c-red   .clbl { color:var(--red); }
+  .fha-traffic { background:var(--gray-100); border:1px solid var(--gray-200); border-radius:10px; padding:14px 16px; margin-top:12px; }
+  .fha-traffic-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:10px; }
+  .def-key { margin-top:28px; border-top:1px solid var(--gray-200); padding-top:20px; }
+  .def-key-title { font-size:11px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--navy); margin-bottom:14px; }
+  .def-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0; }
+  .def-item { padding:8px 12px 8px 0; border-bottom:1px solid var(--gray-200); }
+  .def-item:nth-last-child(-n+3) { border-bottom:none; }
+  .def-term { font-size:11px; font-weight:500; color:var(--navy); margin-bottom:2px; }
+  .def-desc { font-size:11px; color:var(--gray-600); line-height:1.5; }
+  .footer { border-top:1px solid var(--gray-200); margin-top:20px; padding-top:12px; display:flex; justify-content:space-between; }
+  .footer span { font-size:11px; color:var(--gray-600); }
+  .print-btn { position:fixed; top:20px; right:20px; background:var(--navy); color:white; border:none; padding:9px 18px; border-radius:6px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; letter-spacing:0.04em; z-index:100; box-shadow:0 2px 12px rgba(0,0,0,0.18); }
+  .print-btn:hover { background:#183459; }
+  @media(max-width:780px){ .row-4,.row-5,.row-6{grid-template-columns:repeat(2,1fr)} .two,.callout-strip,.def-grid{grid-template-columns:1fr} .fha-traffic-grid{grid-template-columns:repeat(2,1fr)} }
+</style>
+</head>
+<body>
+<button class="print-btn no-print" onclick="window.print()">Print / Save PDF</button>
+<div class="page">
+  <div class="header">
+    <div>
+      <div class="hdr-eyebrow">Gate House Strategies</div>
+      <div class="hdr-title">Monthly Engagement Report</div>
+      <div class="final-badge">End-of-Month Final &nbsp;&middot;&nbsp; June 4, 2026</div>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-period">May 2026</div>
+      <div class="hdr-note">MoM = vs. April 2026 &nbsp;&middot;&nbsp; YoY = Jun &apos;25&ndash;May &apos;26<br>Website &amp; search reflect May (final complete month)<br>All website &amp; search data filtered to US traffic only</div>
+    </div>
+  </div>
+
+  <div class="narrative">
+    <strong>May was the strongest all-around month of the year.</strong> Website traffic rebounded sharply &mdash; 861 views (+20.8% MoM) and 441 users (+60.9%) driven by the May 8 FHA+ send. The FHA+ send is now final at <strong>202 unique opens (44.6% open rate) and 72 unique clicks (15.9% click rate)</strong>, both records for the newsletter. LinkedIn content surged: 9 posts published drove <strong>3K impressions (+103.5% MoM)</strong> with Brian Montgomery&rsquo;s FHA appraisal flexibility post leading at 1,207 impressions and a 7.54% engagement rate. Search improved for the first time in two months &mdash; average position rose to <strong>8.2 (from 8.9 in April)</strong>, approaching the &le;8 target. <strong>One persistent flag: unsubscribes held at 11 (2.43%)</strong>, above the &lt;2% healthy threshold &mdash; review list composition before the June send. Bounce rate worsened to 68.8% MoM, partly attributable to FHA+ email traffic which tends to read one page and exit.
+  </div>
+
+  <!-- GOOGLE ANALYTICS -->
+  <div class="section">
+    <div class="sec-header"><div class="sec-label">Google Analytics &mdash; Website</div><div class="sec-line"></div><span class="sec-tag tag-green">May &mdash; Final</span></div>
+    <div class="metric-block">
+      <div class="row-label">Month (May)</div>
+      <div class="metric-row row-4">
+        <div class="mc b-blue"><div class="ml"><span class="term">Views<span class="tip">Total page loads including repeat visits by the same user.</span></span></div><div class="mv">861</div><div class="md up">&uarr; +20.8% MoM</div></div>
+        <div class="mc b-blue"><div class="ml"><span class="term">Total Users<span class="tip">Unique visitors &mdash; each person counted once regardless of how many times they visited.</span></span></div><div class="mv">441</div><div class="md up">&uarr; +60.9% MoM</div></div>
+        <div class="mc b-blue"><div class="ml"><span class="term">Sessions<span class="tip">Number of distinct visits. A session ends after 30 minutes of inactivity.</span></span></div><div class="mv">571</div><div class="md up">&uarr; +46.4% MoM</div></div>
+        <div class="mc b-blue"><div class="ml"><span class="term">Bounce Rate<span class="tip">% of visits under 10 seconds with no meaningful interaction. Lower is better.</span></span></div><div class="mv">68.8%</div><div class="md dn">&uarr; +24.8% MoM</div><div class="target-row"><span class="tbadge off-t">Off target</span><span class="tlbl">Target: &lt;50%</span></div></div>
+      </div>
+    </div>
+    <div class="metric-block yoy-spacer">
+      <div class="row-label">Year to date (Jun &apos;25&ndash;May &apos;26)</div>
+      <div class="metric-row row-4">
+        <div class="mc-yoy"><div class="ml-yoy">Views YTD</div><div class="mv-yoy">9K</div><div class="md-yoy">&uarr; +3.8%</div></div>
+        <div class="mc-yoy"><div class="ml-yoy">Users YTD</div><div class="mv-yoy">4K</div><div class="md-yoy">&uarr; +19.9%</div></div>
+        <div class="mc-yoy"><div class="ml-yoy">Sessions YTD</div><div class="mv-yoy">5K</div><div class="md-yoy">&uarr; +16.2%</div></div>
+        <div class="mc-yoy"><div class="ml-yoy">Bounce Rate YTD</div><div class="mv-yoy">71.4%</div><div class="md-yoy">&uarr; +7.8%</div></div>
+      </div>
+    </div>
+    <div style="background:var(--blue-light);border:1px solid #C8DCEF;border-radius:7px;padding:10px 14px;margin-top:10px;font-size:13px;color:#183459;line-height:1.65;"><strong>Context:</strong> May traffic was primarily FHA+ send-driven. Top landing pages: /fha-plus/may-2026 (211 views), homepage (190 views), /teamate/michael-marshall (81 views), /teamate/brian-montgomery (71 views). Traffic peaked sharply around May 8&ndash;9 (send date) then normalized. Top cities: Arlington (157), Ashburn (141), Washington (65), New York (60). Desktop accounted for 70% of sessions (604 views).</div>
+  </div>
+
+  <!-- GOOGLE SEARCH -->
+  <div class="section">
+    <div class="sec-header"><div class="sec-label">Google Search Console</div><div class="sec-line"></div><span class="sec-tag tag-green">May &mdash; Final</span></div>
+    <div class="metric-block">
+      <div class="row-label">Month (May)</div>
+      <div class="metric-row row-4">
+        <div class="mc b-navy"><div class="ml"><span class="term">Impressions<span class="tip">Times the site appeared in Google search results, whether or not anyone clicked.</span></span></div><div class="mv">10,900</div><div class="md up">&uarr; +4.9% MoM</div></div>
+        <div class="mc b-navy"><div class="ml"><span class="term">Clicks<span class="tip">Total times users clicked through from Google search results to the site.</span></span></div><div class="mv">142</div><div class="md up">&uarr; +10.9% MoM</div></div>
+        <div class="mc b-navy"><div class="ml"><span class="term">Site CTR<span class="tip">Click-Through Rate &mdash; % of search impressions that resulted in a click.</span></span></div><div class="mv">1.3%</div><div class="md up">&uarr; +5.8% MoM</div><div class="target-row"><span class="tbadge off-t">Off target</span><span class="tlbl">Target: &ge;5%</span></div></div>
+        <div class="mc b-navy"><div class="ml"><span class="term">Avg. Position<span class="tip">Average ranking across all queries. Lower = higher on results page. Target &le;8.</span></span></div><div class="mv">8.2</div><div class="md up">&uarr; improved 8.0% MoM</div><div class="target-row"><span class="tbadge off-t">Near target</span><span class="tlbl">Target: &le;8</span></div></div>
+      </div>
+    </div>
+    <div class="metric-block yoy-spacer">
+      <div class="row-label">Year to date (Jun &apos;25&ndash;May &apos;26)</div>
+      <div class="metric-row row-4">
+        <div class="mc-yoy"><div class="ml-yoy">Impressions YTD</div><div class="mv-yoy">101.3K</div><div class="md-yoy">&uarr; +376.0%</div></div>
+        <div class="mc-yoy"><div class="ml-yoy">Clicks YTD</div><div class="mv-yoy">2K</div><div class="md-yoy">&uarr; +86.2%</div></div>
+        <div class="mc-yoy"><div class="ml-yoy">Site CTR YTD</div><div class="mv-yoy">2%</div><div class="md-yoy">&darr; -60.9%</div></div>
+        <div class="mc-yoy"><div class="ml-yoy">Avg. Position YTD</div><div class="mv-yoy">11.4</div><div class="md-yoy">&uarr; improved 7.8%</div></div>
+      </div>
+    </div>
+    <div class="two">
+      <div class="cc"><div class="ct">Top queries by impressions (May)</div><div style="position:relative;width:100%;height:155px;"><canvas id="queryChart"></canvas></div></div>
+      <div class="cc"><div class="ct">Search growth &mdash; YTD comparison</div><div style="position:relative;width:100%;height:155px;"><canvas id="yoySearch"></canvas></div></div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- LINKEDIN -->
+  <div class="section">
+    <div class="sec-header">
+      <div class="sec-label">LinkedIn</div><div class="sec-line"></div>
+      <span class="sec-tag tag-green">9 posts &mdash; May final &nbsp;&middot;&nbsp; Target: 16</span>
+    </div>
+    <div class="metric-block">
+      <div class="row-label">Page (May &mdash; final)</div>
+      <div class="metric-row row-5">
+        <div class="mc b-blue"><div class="ml"><span class="term">Page Views<span class="tip">Times the Gate House LinkedIn company page itself was viewed.</span></span></div><div class="mv">70</div><div class="md up">&uarr; +18.6% MoM</div></div>
+        <div class="mc b-blue"><div class="ml"><span class="term">Unique Visitors<span class="tip">Distinct LinkedIn members who viewed the company page &mdash; each counted once.</span></span></div><div class="mv">28</div><div class="md dn">&darr; -15.2% MoM</div></div>
+        <div class="mc b-blue"><div class="ml"><span class="term">Button Clicks<span class="tip">Clicks on the custom call-to-action button on the LinkedIn page.</span></span></div><div class="mv">3</div><div class="md up">&uarr; +200% MoM</div></div>
+        <div class="mc b-blue"><div class="ml"><span class="term">New Followers<span class="tip">Net new LinkedIn members who followed the Gate House Strategies page this month.</span></span></div><div class="mv">11</div><div class="md up">&uarr; +57.1% MoM</div></div>
+        <div class="mc b-blue" style="border-left:3px solid var(--navy);background:var(--blue-light);border-color:#C8DCEF;">
+          <div class="ml" style="color:#3a6fa0;"><span class="term">Total Followers<span class="tip">Cumulative total LinkedIn followers of the Gate House Strategies company page.</span></span></div>
+          <div class="mv" style="color:var(--navy);">—</div>
+          <div class="md nt">Add from LinkedIn</div>
+        </div>
+      </div>
+    </div>
+    <div class="metric-block yoy-spacer">
+      <div class="row-label">Content engagement (May &mdash; final)</div>
+      <div class="metric-row row-4">
+        <div class="mc b-teal highlight"><div class="ml"><span class="term">Impressions<span class="tip">Total times any Gate House post appeared on a LinkedIn screen. Measures reach, not interaction.</span></span></div><div class="mv">3,000</div><div class="md up">&uarr; +50.0% MoM</div></div>
+        <div class="mc b-teal highlight"><div class="ml"><span class="term">Reactions<span class="tip">Emoji responses on posts (like, celebrate, etc.) &mdash; the most common engagement type.</span></span></div><div class="mv">64</div><div class="md up">&uarr; +18.5% MoM</div></div>
+        <div class="mc b-teal highlight"><div class="ml"><span class="term">Comments<span class="tip">Written replies on posts &mdash; represents deeper engagement and conversation.</span></span></div><div class="mv">2</div><div class="md nt">&mdash;</div></div>
+        <div class="mc b-teal highlight"><div class="ml"><span class="term">Shares<span class="tip">Times a post was reshared by another LinkedIn member &mdash; amplifies reach beyond direct followers.</span></span></div><div class="mv">2</div><div class="md nt">&mdash;</div></div>
+      </div>
+    </div>
+    <div class="metric-block yoy-spacer">
+      <div class="row-label">Content volume (May)</div>
+      <div class="metric-row row-4" style="grid-template-columns:repeat(2,1fr); max-width:50%;">
+        <div class="mc b-teal"><div class="ml">Posts published</div><div class="mv">9</div><div class="md dn">vs. target 16</div></div>
+        <div class="mc b-teal"><div class="ml">Reposts</div><div class="mv">&mdash;</div><div class="md nt">TBD</div></div>
+      </div>
+    </div>
+    <div class="metric-block yoy-spacer">
+      <div class="row-label">Year to date &mdash; content (Jun &apos;25&ndash;May &apos;26)</div>
+      <div class="metric-row row-4">
+        <div class="mc-yoy"><div class="ml-yoy">Impressions YTD</div><div class="mv-yoy">58K</div><div class="md-yoy">&uarr; +104.3%</div></div>
+        <div class="mc-yoy"><div class="ml-yoy">Reactions YTD</div><div class="mv-yoy">1,515</div><div class="md-yoy">&uarr; +69.5%</div></div>
+        <div class="mc-yoy"><div class="ml-yoy">Comments YTD</div><div class="mv-yoy">50</div><div class="md-yoy">&uarr; +66.7%</div></div>
+        <div class="mc-yoy"><div class="ml-yoy">New followers YTD</div><div class="mv-yoy">205</div><div class="md-yoy">&uarr; YTD</div></div>
+      </div>
+    </div>
+    <div class="two">
+      <div class="cc">
+        <div class="ct">Top posts by engagement rate &mdash; May (final)</div>
+        <table class="ptable">
+          <thead><tr><th></th><th>Post</th><th class="r">Impr.</th><th class="r"><span class="term">Eng.%<span class="tip">Engagement Rate &mdash; total interactions divided by impressions.</span></span></th><th class="r">Link</th></tr></thead>
+          <tbody>
+            <tr><td><span class="rnk rnk-t">1</span></td><td>Brian Montgomery &mdash; FHA appraisal flexibilities (EO)</td><td class="r">1,207</td><td class="r">7.54%</td><td class="r"><a class="post-link" href="https://www.linkedin.com/feed/update/urn:li:share:7462247540990603264" target="_blank">&#8599;</a></td></tr>
+            <tr><td><span class="rnk rnk-t">2</span></td><td>Michael Marshall &mdash; AI regulations &amp; housing (FHA+)</td><td class="r">141</td><td class="r">7.09%</td><td class="r"><a class="post-link" href="https://www.linkedin.com/feed/update/urn:li:share:7456469305866563584" target="_blank">&#8599;</a></td></tr>
+            <tr><td><span class="rnk rnk-t">3</span></td><td>Ginnie Mae TPP delinquency adjustment</td><td class="r">613</td><td class="r">5.55%</td><td class="r"><a class="post-link" href="https://www.linkedin.com/feed/update/urn:li:share:7460436491555500035" target="_blank">&#8599;</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cc">
+        <div class="ct">All posts &mdash; May impressions &amp; engagement</div>
+        <table class="ptable">
+          <thead><tr><th>Post (abbreviated)</th><th class="r">Impr.</th><th class="r">Eng.%</th><th class="r">React.</th></tr></thead>
+          <tbody>
+            <tr><td>Brian Montgomery &mdash; FHA appraisal flex.</td><td class="r">1,207</td><td class="r">7.54%</td><td class="r">27</td></tr>
+            <tr><td>Ginnie Mae &mdash; TPP delinquency</td><td class="r">613</td><td class="r">5.55%</td><td class="r">7</td></tr>
+            <tr><td>Scott Turner &mdash; HUD Senate testimony</td><td class="r">330</td><td class="r">3.94%</td><td class="r">7</td></tr>
+            <tr><td>21st Century ROAD to Housing Act</td><td class="r">238</td><td class="r">5.04%</td><td class="r">0</td></tr>
+            <tr><td>Michael Marshall &mdash; Crypto/mortgage</td><td class="r">166</td><td class="r">4.82%</td><td class="r">5</td></tr>
+            <tr><td>Kevin Warsh &mdash; Fed Chair confirmed</td><td class="r">158</td><td class="r">1.90%</td><td class="r">2</td></tr>
+            <tr><td>Michael Marshall &mdash; AI regulations</td><td class="r">141</td><td class="r">7.09%</td><td class="r">2</td></tr>
+            <tr><td>Student loan default &amp; FHA eligibility</td><td class="r">137</td><td class="r">2.92%</td><td class="r">2</td></tr>
+            <tr><td>ROAD to Housing &mdash; House 396-13 vote</td><td class="r">102</td><td class="r">2.94%</td><td class="r">1</td></tr>
+          </tbody>
+        </table>
+        <div style="font-size:11px;color:var(--gray-600);margin-top:8px;line-height:1.5;">May post count of 9 remains below the 16-post target. Brian Montgomery&rsquo;s top post drove 40% of total monthly impressions.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- FHA PLUS MAY SEND — FINAL -->
+  <div class="section">
+    <div class="sec-header">
+      <div class="sec-label">FHA Plus Intel Brief &mdash; May 8, 2026 send</div><div class="sec-line"></div>
+      <span class="sec-tag tag-green">Final data &mdash; June 4, 2026</span>
+    </div>
+    <div class="metric-block">
+      <div class="row-label">Send performance (final)</div>
+      <div class="metric-row row-6">
+        <div class="mc b-navy"><div class="ml"><span class="term">Emails Sent<span class="tip">Total addresses the FHA+ Intel Brief was sent to.</span></span></div><div class="mv">453</div><div class="md nt">list size</div></div>
+        <div class="mc b-navy"><div class="ml"><span class="term">Delivered<span class="tip">Emails that successfully reached the inbox. 451 of 453.</span></span></div><div class="mv">451</div><div class="md up">99.56% rate</div></div>
+        <div class="mc b-navy"><div class="ml"><span class="term">Unique Opens<span class="tip">Individual subscribers who opened the email at least once.</span></span></div><div class="mv">202</div><div class="md up">44.6% rate</div></div>
+        <div class="mc b-navy"><div class="ml"><span class="term">Unique Clicks<span class="tip">Individual subscribers who clicked at least one link &mdash; each counted once.</span></span></div><div class="mv">72</div><div class="md up">15.9% rate</div></div>
+        <div class="mc b-navy" style="border-left:3px solid var(--red);background:var(--red-light);border-color:#E8A8A8;">
+          <div class="ml" style="color:var(--red);">
+            <span class="term">Unsubscribes<span class="tip">Subscribers who opted out. 2.43% rate &mdash; above the healthy threshold of &lt;2%. Monitor closely before June send.</span></span>
+          </div>
+          <div class="mv" style="color:var(--red);">11</div>
+          <div class="md dn">&uarr; 2.43% rate</div>
+        </div>
+        <div class="mc b-navy"><div class="ml"><span class="term">Bounces<span class="tip">2 soft bounces (0.44%). 0 hard bounces this send.</span></span></div><div class="mv">2</div><div class="md up">0.44% rate</div></div>
+      </div>
+    </div>
+    <div class="two">
+      <div class="cc"><div class="ct">Engagement funnel</div><div style="position:relative;width:100%;height:175px;"><canvas id="fhaFunnel"></canvas></div></div>
+      <div class="cc">
+        <div class="ct">Clicked links &mdash; <span class="term">unique<span class="tip">Unique = distinct subscribers who clicked. Total = all clicks including repeats.</span></span> vs. total</div>
+        <table class="ltable">
+          <thead><tr><th>Section</th><th class="r">Unique</th><th class="r">Total</th><th style="width:55px;padding-left:8px;"></th></tr></thead>
+          <tbody>
+            <tr><td>Think piece</td><td class="r">45</td><td class="r">122</td><td style="padding:5px 7px;"><div class="bar-bg"><div class="bar-fill" style="width:100%"></div></div></td></tr>
+            <tr><td>Jan 2026 issue (Webflow)</td><td class="r">36</td><td class="r">103</td><td style="padding:5px 7px;"><div class="bar-bg"><div class="bar-fill" style="width:84%"></div></div></td></tr>
+            <tr><td>Subscribe (ActiveCampaign)</td><td class="r">36</td><td class="r">93</td><td style="padding:5px 7px;"><div class="bar-bg"><div class="bar-fill" style="width:76%"></div></div></td></tr>
+            <tr><td>Inside voices</td><td class="r">29</td><td class="r">75</td><td style="padding:5px 7px;"><div class="bar-bg"><div class="bar-fill" style="width:61%"></div></div></td></tr>
+            <tr><td>Three questions</td><td class="r">28</td><td class="r">71</td><td style="padding:5px 7px;"><div class="bar-bg"><div class="bar-fill" style="width:58%"></div></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="callout-strip">
+      <div class="callout c-green"><div class="clbl">Record send performance</div>44.6% open rate and 15.9% click rate are both records for FHA+, significantly exceeding B2B benchmarks (~21% open, ~2% click). 0 spam complaints.</div>
+      <div class="callout c-green"><div class="clbl">Clean deliverability</div>99.56% delivery, 0 hard bounces, 2 soft bounces (0.44%). List hygiene remains strong. Think piece and Subscribe links drove the most clicks.</div>
+      <div class="callout c-red"><div class="clbl">Unsubscribes: action needed</div>11 unsubscribes (2.43%) crossed the &lt;2% healthy threshold for the second consecutive send. All cited &ldquo;no reason provided.&rdquo; Review list composition before June.</div>
+    </div>
+    <div style="background:var(--blue-light);border:1px solid #C8DCEF;border-radius:7px;padding:10px 14px;margin-top:10px;font-size:12px;color:#183459;line-height:1.6;">
+      <strong>vs. April 7 send:</strong> Open rate improved from 38.5% &rarr; 44.6% (&uarr; +6.1 pts). Click rate improved from 8.5% &rarr; 15.9% (&uarr; +7.4 pts). Unsubscribes rose from 5 &rarr; 11. List size declined from 457 &rarr; 453 (net effect of removals and new adds). FHA+ website traffic (May 2026 page): 216 views, 192 sessions, 158 new users &mdash; primarily driven by email (219 views from ActiveCampaign).
+    </div>
+  </div>
+
+  <!-- FHA+ WEBSITE TRAFFIC -->
+  <div class="section">
+    <div class="sec-header"><div class="sec-label">FHA+ Website Traffic &mdash; May 2026</div><div class="sec-line"></div><span class="sec-tag tag-green">May &mdash; Final</span></div>
+    <div class="fha-traffic">
+      <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:var(--gray-600);margin-bottom:10px;">FHA+ section overall (all issues)</div>
+      <div class="fha-traffic-grid">
+        <div class="mc b-teal"><div class="ml">Total Views</div><div class="mv">355</div><div class="md up">&uarr; +61.4% MoM</div></div>
+        <div class="mc b-teal"><div class="ml">Total Users</div><div class="mv">256</div><div class="md up">&uarr; +178.3% MoM</div></div>
+        <div class="mc b-teal"><div class="ml">Sessions</div><div class="mv">290</div><div class="md up">&uarr; +132.0% MoM</div></div>
+        <div class="mc b-teal"><div class="ml">Bounce Rate</div><div class="mv">82.8%</div><div class="md dn">&uarr; +26.2% MoM</div></div>
+      </div>
+      <div style="margin-top:10px;font-size:12px;color:var(--gray-600);line-height:1.65;">
+        Top traffic sources to FHA+ pages: <strong>ActiveCampaign/email</strong> (219 views &mdash; 87.6% bounce rate, expected for single-article readers), <strong>LinkedIn/social</strong> (89 views), <strong>Google/organic</strong> (30 views), <strong>Direct</strong> (14 views). May 2026 issue alone: 216 views / 192 sessions / 158 new users. Top cities: Ashburn (119), Washington (46), Arlington (22), New York (17).
+      </div>
+    </div>
+  </div>
+
+  <!-- DEFINITION KEY -->
+  <div class="def-key">
+    <div class="def-key-title">Definition Key</div>
+    <div class="def-grid">
+      <div class="def-item"><div class="def-term">Views</div><div class="def-desc">Total page loads on the website, including repeat visits by the same user.</div></div>
+      <div class="def-item"><div class="def-term">Total Users</div><div class="def-desc">Unique visitors to the site within the period &mdash; each person counted once.</div></div>
+      <div class="def-item"><div class="def-term">Sessions</div><div class="def-desc">Distinct visits to the site. A session ends after 30 minutes of inactivity.</div></div>
+      <div class="def-item"><div class="def-term">Bounce Rate</div><div class="def-desc">% of visits under 10 seconds with no meaningful interaction. Lower is better.</div></div>
+      <div class="def-item"><div class="def-term">Impressions (Search)</div><div class="def-desc">Times the site appeared in Google search results, regardless of clicks.</div></div>
+      <div class="def-item"><div class="def-term">Site CTR</div><div class="def-desc">Click-through rate &mdash; % of search impressions that resulted in a click to the site.</div></div>
+      <div class="def-item"><div class="def-term">Avg. Position</div><div class="def-desc">Average search ranking across all queries. Lower = higher on results page. Target &le;8.</div></div>
+      <div class="def-item"><div class="def-term">Impressions (LinkedIn)</div><div class="def-desc">Times a post appeared on any LinkedIn screen. Measures reach, not interaction.</div></div>
+      <div class="def-item"><div class="def-term">Reactions</div><div class="def-desc">Emoji responses on LinkedIn posts &mdash; the most common engagement type.</div></div>
+      <div class="def-item"><div class="def-term">Engagement Rate</div><div class="def-desc">Total interactions &divide; impressions. Measures how actively the audience engages.</div></div>
+      <div class="def-item"><div class="def-term">Unique Opens</div><div class="def-desc">Individual subscribers who opened the FHA+ email at least once.</div></div>
+      <div class="def-item"><div class="def-term">Unique Clicks</div><div class="def-desc">Individual subscribers who clicked at least one link in the email.</div></div>
+      <div class="def-item"><div class="def-term">Hard Bounce</div><div class="def-desc">Email permanently undeliverable. Should be removed from the list.</div></div>
+      <div class="def-item"><div class="def-term">Unsubscribe Rate</div><div class="def-desc">% of recipients who opted out. Healthy threshold is under 2% per send.</div></div>
+      <div class="def-item"><div class="def-term">MoM / YoY</div><div class="def-desc">Month-over-month (vs. prior month) and year-over-year (vs. same period last year).</div></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Gate House Strategies &nbsp;&middot;&nbsp; Confidential &mdash; Partner Use Only</span>
+    <span>Final report: June 4, 2026 &nbsp;&middot;&nbsp; Website/LinkedIn/Search = May final &nbsp;&middot;&nbsp; FHA+ = May 8 send (final)</span>
+  </div>
+</div>
+<script>
+const grid='rgba(0,0,0,0.07)';
+const tk={font:{size:11,family:'DM Sans'},color:'#6B6A66'};
+const tk9={font:{size:10,family:'DM Sans'},color:'#6B6A66'};
+new Chart(document.getElementById('queryChart'),{type:'bar',data:{labels:['brian montgomery','mark ehrenreich','keith becker','gatehouse','brian montgomery congress'],datasets:[{data:[800,789,125,116,107],backgroundColor:'#1B5FA6',borderRadius:3,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:grid},ticks:tk,border:{display:false}},y:{grid:{display:false},ticks:tk9,border:{display:false}}}}});
+new Chart(document.getElementById('yoySearch'),{type:'bar',data:{labels:['Impressions (K)','Clicks (K)'],datasets:[{label:"Prior YTD",data:[19.8,0.92],backgroundColor:'#B5D4F4',borderRadius:3,borderSkipped:false},{label:"Current YTD",data:[101.3,2.0],backgroundColor:'#0D2240',borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',align:'end',labels:{font:{size:10,family:'DM Sans'},color:'#6B6A66',boxWidth:9,boxHeight:9,padding:8,borderRadius:2}}},scales:{x:{grid:{display:false},ticks:tk,border:{display:false}},y:{grid:{color:grid},ticks:tk,border:{display:false}}}}});
+new Chart(document.getElementById('fhaFunnel'),{type:'bar',data:{labels:['Sent','Delivered','Unique opens','Unique clicks'],datasets:[{data:[453,451,202,72],backgroundColor:['#B5D4F4','#378ADD','#1B5FA6','#0D2240'],borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:tk,border:{display:false}},y:{grid:{color:grid},ticks:tk,border:{display:false}}}}});
+</script>
+</body>
+</html>
