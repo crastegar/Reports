@@ -10,34 +10,35 @@
   :root {
     --navy:#0D2240; --blue:#1B5FA6; --blue-light:#EBF2FA;
     --teal:#0F6E56; --teal-light:#E4F3EE;
-    --gray-100:#F5F4F1; --gray-200:#E8E7E3; --gray-600:#6B6A66;
+    --amber:#B87A1A; --amber-light:#FBF2E1;
+    --gray-100:#F5F4F1; --gray-200:#E8E7E3; --gray-400:#B0AFA9; --gray-600:#6B6A66;
     --white:#FFFFFF; --text:#1A1A18;
   }
-  body { font-family:'DM Sans',sans-serif; background:var(--gray-100); color:var(--text); font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased; min-height:100vh; }
-  .page { max-width:780px; margin:0 auto; padding:64px 32px; }
-  .header { margin-bottom:48px; }
-  .eyebrow { font-size:11px; font-weight:500; letter-spacing:0.13em; text-transform:uppercase; color:var(--blue); margin-bottom:8px; }
-  .title { font-family:'Playfair Display',serif; font-size:32px; font-weight:400; color:var(--navy); margin-bottom:12px; }
-  .subtitle { font-size:14px; color:var(--gray-600); line-height:1.6; max-width:480px; }
-  .divider { border:none; border-top:2px solid var(--navy); margin-bottom:40px; }
-  .year-group { margin-bottom:36px; }
-  .year-label { font-size:11px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--gray-600); margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid var(--gray-200); }
-  .report-list { display:flex; flex-direction:column; gap:10px; }
-  .report-card { background:var(--white); border:1px solid var(--gray-200); border-radius:10px; padding:18px 22px; display:flex; align-items:center; justify-content:space-between; text-decoration:none; color:var(--text); transition:box-shadow 0.15s, border-color 0.15s; }
-  .report-card:hover { box-shadow:0 4px 20px rgba(0,0,0,0.08); border-color:#9ec6e8; }
-  .report-card.latest { border-left:4px solid var(--blue); }
-  .rc-left { display:flex; align-items:center; gap:14px; }
-  .rc-month { font-family:'Playfair Display',serif; font-size:18px; color:var(--navy); }
-  .rc-badge { font-size:10px; font-weight:500; padding:2px 8px; border-radius:3px; letter-spacing:0.04em; }
-  .rc-badge.latest-badge { background:var(--blue-light); color:var(--blue); }
-  .rc-badge.final { background:var(--teal-light); color:var(--teal); }
-  .rc-badge.midmonth { background:#FBF2E1; color:#B87A1A; border:1px solid #FAC775; }
-  .rc-arrow { font-size:18px; color:var(--blue); opacity:0.5; transition:opacity 0.15s; }
-  .report-card:hover .rc-arrow { opacity:1; }
-  .coming-soon { background:var(--gray-100); border:1px dashed var(--gray-200); border-radius:10px; padding:18px 22px; display:flex; align-items:center; justify-content:space-between; color:var(--gray-600); }
-  .cs-month { font-family:'Playfair Display',serif; font-size:18px; color:var(--gray-600); }
-  .cs-label { font-size:10px; font-weight:500; background:var(--gray-200); color:var(--gray-600); padding:2px 8px; border-radius:3px; }
-  .footer { margin-top:56px; padding-top:20px; border-top:1px solid var(--gray-200); font-size:12px; color:var(--gray-600); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+  body { font-family:'DM Sans',sans-serif; background:var(--gray-100); color:var(--text); font-size:14px; -webkit-font-smoothing:antialiased; min-height:100vh; }
+  .page { max-width:860px; margin:48px auto; padding:0 24px; }
+  .header { margin-bottom:40px; }
+  .eyebrow { font-size:11px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:var(--blue); margin-bottom:8px; }
+  .title { font-family:'Playfair Display',serif; font-size:32px; font-weight:400; color:var(--navy); line-height:1.2; }
+  .subtitle { font-size:13px; color:var(--gray-600); margin-top:8px; }
+  .section-label { font-size:11px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--navy); margin-bottom:14px; display:flex; align-items:center; gap:10px; }
+  .section-label::after { content:''; flex:1; height:1px; background:var(--gray-200); }
+  .report-grid { display:grid; gap:12px; margin-bottom:32px; }
+  .report-card { background:var(--white); border:1px solid var(--gray-200); border-radius:10px; padding:20px 22px; display:flex; align-items:center; justify-content:space-between; text-decoration:none; color:var(--text); transition:box-shadow 0.15s, border-color 0.15s; }
+  .report-card:hover { box-shadow:0 4px 20px rgba(0,0,0,0.08); border-color:var(--blue); }
+  .card-left { display:flex; flex-direction:column; gap:5px; }
+  .card-month { font-family:'Playfair Display',serif; font-size:20px; font-weight:400; color:var(--navy); }
+  .card-tags { display:flex; gap:6px; flex-wrap:wrap; }
+  .badge { font-size:10px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; padding:2px 8px; border-radius:3px; }
+  .badge-teal   { background:var(--teal-light);  color:var(--teal); border:1px solid #9fd4c4; }
+  .badge-blue   { background:var(--blue-light);  color:var(--blue); border:1px solid #C8DCEF; }
+  .badge-navy   { background:#E9EDF2; color:var(--navy); border:1px solid #C5CDD9; }
+  .badge-latest { background:var(--navy); color:#fff; }
+  .card-arrow { font-size:18px; color:var(--gray-400); transition:transform 0.15s, color 0.15s; }
+  .report-card:hover .card-arrow { transform:translateX(3px); color:var(--blue); }
+  .coming-soon { background:var(--white); border:1px dashed var(--gray-200); border-radius:10px; padding:20px 22px; display:flex; align-items:center; justify-content:space-between; }
+  .cs-month { font-family:'Playfair Display',serif; font-size:20px; color:var(--gray-400); }
+  .cs-label { font-size:12px; color:var(--gray-400); font-style:italic; }
+  .footer { margin-top:48px; padding-top:20px; border-top:1px solid var(--gray-200); font-size:11px; color:var(--gray-600); }
 </style>
 </head>
 <body>
@@ -45,69 +46,66 @@
   <div class="header">
     <div class="eyebrow">Gate House Strategies</div>
     <div class="title">Engagement Reports</div>
-    <div class="subtitle">Monthly analytics covering website traffic, Google Search, LinkedIn, and FHA Plus Intel Brief performance. Confidential — partner use only.</div>
+    <div class="subtitle">Monthly website, search, LinkedIn, and FHA+ analytics &nbsp;&middot;&nbsp; US traffic only</div>
   </div>
-  <hr class="divider">
 
-  <div class="year-group">
-    <div class="year-label">2026</div>
-    <div class="report-list">
-
-      <a class="report-card latest" href="GateHouse_Jun2026_MidMonth.html">
-        <div class="rc-left">
-          <div class="rc-month">June 2026</div>
-          <span class="rc-badge latest-badge">Latest</span>
-          <span class="rc-badge midmonth">Mid-Month</span>
-        </div>
-        <div class="rc-arrow">&#8599;</div>
-      </a>
-
-      <a class="report-card" href="GateHouse_May2026_Final.html">
-        <div class="rc-left">
-          <div class="rc-month">May 2026</div>
-          <span class="rc-badge final">Final</span>
-        </div>
-        <div class="rc-arrow">&#8599;</div>
-      </a>
-
-      <a class="report-card" href="GateHouse_Apr2026_Final.html">
-        <div class="rc-left">
-          <div class="rc-month">April 2026</div>
-          <span class="rc-badge final">Final</span>
-        </div>
-        <div class="rc-arrow">&#8599;</div>
-      </a>
-
-      <a class="report-card" href="GateHouse_Mar2026_Final.html">
-        <div class="rc-left">
-          <div class="rc-month">March 2026</div>
-          <span class="rc-badge final">Final</span>
-        </div>
-        <div class="rc-arrow">&#8599;</div>
-      </a>
-
-      <a class="report-card" href="GateHouse_Feb2026_Final.html">
-        <div class="rc-left">
-          <div class="rc-month">February 2026</div>
-          <span class="rc-badge final">Final</span>
-        </div>
-        <div class="rc-arrow">&#8599;</div>
-      </a>
-
-      <div class="coming-soon">
-        <div class="rc-left">
-          <div class="cs-month">July 2026</div>
-          <span class="cs-label">Coming next month</span>
+  <div class="section-label">2026</div>
+  <div class="report-grid">
+    <a class="report-card" href="GateHouse_Jun2026_Final.html">
+      <div class="card-left">
+        <div class="card-month">June 2026</div>
+        <div class="card-tags">
+          <span class="badge badge-latest">Latest</span>
+          <span class="badge badge-teal">Final</span>
         </div>
       </div>
-
+      <div class="card-arrow">&#8594;</div>
+    </a>
+    <a class="report-card" href="../May 2026 Socials/GateHouse_May2026_Final.html">
+      <div class="card-left">
+        <div class="card-month">May 2026</div>
+        <div class="card-tags">
+          <span class="badge badge-navy">Final</span>
+        </div>
+      </div>
+      <div class="card-arrow">&#8594;</div>
+    </a>
+    <a class="report-card" href="../Apr 2026 Socials/GateHouse_Apr2026_Final.html">
+      <div class="card-left">
+        <div class="card-month">April 2026</div>
+        <div class="card-tags">
+          <span class="badge badge-navy">Final</span>
+        </div>
+      </div>
+      <div class="card-arrow">&#8594;</div>
+    </a>
+    <a class="report-card" href="../Mar 2026 Socials/GateHouse_Mar2026_Final.html">
+      <div class="card-left">
+        <div class="card-month">March 2026</div>
+        <div class="card-tags">
+          <span class="badge badge-navy">Final</span>
+        </div>
+      </div>
+      <div class="card-arrow">&#8594;</div>
+    </a>
+    <a class="report-card" href="../Feb 2026 Socials/GateHouse_Feb2026_Final.html">
+      <div class="card-left">
+        <div class="card-month">February 2026</div>
+        <div class="card-tags">
+          <span class="badge badge-navy">Final</span>
+        </div>
+      </div>
+      <div class="card-arrow">&#8594;</div>
+    </a>
+    <div class="coming-soon">
+      <div class="card-left">
+        <div class="cs-month">July 2026</div>
+        <div class="cs-label">Coming next month</div>
+      </div>
     </div>
   </div>
 
-  <div class="footer">
-    <span>Gate House Strategies &nbsp;&middot;&nbsp; Confidential &mdash; Partner Use Only</span>
-    <span>Updated monthly &nbsp;&middot;&nbsp; All website/search data US traffic only</span>
-  </div>
+  <div class="footer">Gate House Strategies &nbsp;&middot;&nbsp; Confidential &mdash; Partner Use Only</div>
 </div>
 </body>
 </html>
