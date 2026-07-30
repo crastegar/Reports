@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Social Analytics — 6-Month Rolling Tracker</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.min.js" integrity="sha384-yQ4mmBBT+vhTAwjFH0toJXNYJ6O4usWnt6EPIdWwrRvx2V/n5lXuDZQwQFeSFydF" crossorigin="anonymous"></script>
+<style>
+:root { color-scheme: light; --navy:#0D2240; --blue:#1B5FA6; --teal:#0F6E56; --red:#A32D2D; --amber:#B87A1A; }
+* { box-sizing: border-box; }
+body { margin:0; background:#f4f6f8; color:#1a2330; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; font-size:14px; line-height:1.45; }
+.wrap { max-width:1080px; margin:0 auto; padding:24px 20px 60px; }
+header.top { border-bottom:3px solid var(--navy); padding-bottom:14px; margin-bottom:18px; }
+header.top h1 { margin:0 0 4px; font-size:22px; color:var(--navy); }
+header.top .sub { color:#5a6b7b; font-size:13px; }
+.badge { display:inline-block; background:var(--navy); color:#fff; font-size:11px; font-weight:600; padding:2px 9px; border-radius:20px; vertical-align:middle; margin-left:8px; }
+h2.section { font-size:15px; text-transform:uppercase; letter-spacing:.6px; color:var(--navy); margin:32px 0 12px; padding-bottom:6px; border-bottom:1px solid #d5dde5; }
+.note { background:#eef4fa; border-left:3px solid var(--blue); padding:10px 14px; border-radius:4px; color:#3a4b5a; font-size:12.5px; margin:6px 0 18px; }
+.cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:8px; }
+.card { background:#fff; border:1px solid #e2e8ee; border-radius:8px; padding:14px 16px; box-shadow:0 1px 2px rgba(0,0,0,.03); }
+.card .label { font-size:11.5px; color:#6a7887; text-transform:uppercase; letter-spacing:.4px; }
+.card .val { font-size:26px; font-weight:700; color:#16334d; margin-top:4px; }
+.card .mo { font-size:10.5px; color:#9aa6b2; }
+.card .delta { font-size:12px; font-weight:600; margin-top:2px; }
+.up { color:var(--teal); } .down { color:var(--red); } .flat { color:#7a8794; }
+table { width:100%; border-collapse:collapse; background:#fff; border:1px solid #e2e8ee; border-radius:8px; overflow:hidden; font-size:13px; }
+caption { text-align:left; font-weight:700; color:#16334d; padding:10px 12px 8px; font-size:14px; }
+th, td { padding:8px 10px; text-align:center; border-bottom:1px solid #eef2f6; }
+th { background:var(--navy); color:#fff; font-weight:600; font-size:12px; }
+th:first-child, td:first-child { text-align:left; }
+tbody tr:last-child td { border-bottom:none; }
+td.metric { font-weight:600; color:#2b3a4a; }
+td.target { color:#6a7887; font-style:italic; font-size:12px; }
+td.ytd { background:#f7fafc; font-weight:700; font-size:12px; }
+td.na { color:#c2cad2; }
+td.now { background:#f2f7fc; }
+.cell-up { background:#e5f5ea; color:var(--teal); font-weight:600; }
+.cell-down { background:#fcecea; color:var(--red); font-weight:600; }
+.arrow { font-size:11px; }
+.chart-box { background:#fff; border:1px solid #e2e8ee; border-radius:8px; padding:16px; height:300px; margin-bottom:12px; }
+.diagram-box { background:#fff; border:1px solid #e2e8ee; border-radius:8px; padding:20px; overflow:auto; }
+.diagram-box svg { max-width:100%; height:auto; }
+.diagram-box .nodeLabel, .diagram-box foreignObject div { white-space:nowrap; overflow:visible; }
+.backlink { display:inline-block; margin-bottom:14px; font-size:12.5px; color:var(--blue); text-decoration:none; font-weight:600; }
+.backlink:hover { text-decoration:underline; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+@media (max-width:820px){ .grid2 { grid-template-columns:1fr; } }
+.legend-row { font-size:11.5px; color:#6a7887; margin:6px 0 0; }
+footer { margin-top:40px; color:#8593a1; font-size:11.5px; text-align:center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="backlink" href="index.html">&larr; All Engagement Reports</a>
+  <header class="top">
+    <h1>Social Analytics — 6-Month Rolling Tracker <span class="badge" id="periodBadge"></span></h1>
+    <div class="sub">Trend companion to the monthly Gate House Engagement Report · built from the Website &amp; FHA+ report files · US traffic only</div>
+  </header>
+  <div class="note" id="statusNote"></div>
+  <h2 class="section">At a Glance — Latest Actuals</h2>
+  <div class="cards" id="kpiCards"></div>
+  <h2 class="section">Website Traffic — Google Analytics</h2>
+  <div id="tblWeb"></div>
+  <div class="chart-box" style="margin-top:14px;"><canvas id="chartWebTrend"></canvas></div>
+  <h2 class="section">Website Visits via Google / Web Search — Search Console</h2>
+  <div class="note" style="margin-top:0;">The <strong>"visits through Google/web searches"</strong> cut: <strong>Clicks = visits</strong> arriving from Google organic results. Impressions = reach; CTR &amp; Avg. Position = search health (position target &le;8).</div>
+  <div id="tblSearch"></div>
+  <div class="grid2" style="margin-top:14px;">
+    <div class="chart-box"><canvas id="chartSearchTrend"></canvas></div>
+    <div class="chart-box"><canvas id="chartQueries"></canvas></div>
+  </div>
+  <div class="legend-row">Left: Google search visits (clicks) &amp; impressions by month. Right: top search queries driving impressions.</div>
+  <h2 class="section">LinkedIn — Growth &amp; Cadence</h2>
+  <div id="tblLinkedIn"></div>
+  <div class="note" style="margin-top:10px;"><strong>Note:</strong> reports give <em>new</em> followers, not the <strong>absolute total-follower count</strong> vs. the 3,000 target. Add the current total from LinkedIn page admin to track it.</div>
+  <h2 class="section">FHA+ Intel Brief — Monthly Send</h2>
+  <div id="tblFHA"></div>
+  <div class="grid2" style="margin-top:14px;">
+    <div class="chart-box"><canvas id="chartFHATrend"></canvas></div>
+    <div class="diagram-box"><div style="font-weight:700;color:#16334d;margin-bottom:8px;" id="funnelTitle"></div><pre class="mermaid" id="mmFunnel"></pre></div>
+  </div>
+  <div class="legend-row">Left: FHA+ unique opens &amp; clicks by send. Right: latest-send email funnel. Unusually high click counts usually mean link-scanner inflation — watch for it.</div>
+  <h2 class="section">Where Website Visits Come From</h2>
+  <div class="grid2">
+    <div class="chart-box"><canvas id="chartChannel"></canvas></div>
+    <div class="diagram-box"><pre class="mermaid" id="mmChannels"></pre></div>
+  </div>
+  <div class="legend-row">Left: FHA+ page visits by channel (from the report). Right: acquisition channels feeding the website &amp; FHA+. Google organic search is tracked as a first-class source; LinkedIn/Newsletter UTM splits need Jeff's UTM reporting.</div>
+  <footer>Gate House Strategies · Confidential — Partner Use Only · Source: Website Reports &amp; FHA+ Reports PDFs · YTD* = report trailing-12 (web/search/LinkedIn) or send totals (FHA+)</footer>
+</div>
+<script>
+const D = {"MONTHS": ["Feb", "Mar", "Apr", "May", "Jun", "Jul"], "period_label": "FEB – JUL 2026", "kpis": [{"label": "Website Sessions", "mo": "Jun", "val": 392, "prev": 571}, {"label": "Google Search Visits", "mo": "Jun", "val": 166, "prev": 142}, {"label": "LinkedIn Reactions", "mo": "Jun", "val": 106, "prev": 64}, {"label": "FHA+ Unique Clicks", "mo": "Jul", "val": 164, "prev": 77}, {"label": "FHA+ Unsubscribes", "mo": "Jul", "val": 0, "prev": 6, "lower": true}], "sections": {"web": {"caption": "Website traffic — rolling (actuals)", "rows": [{"m": "Views", "t": "1,000", "ytd": "10K ▲21.9%", "lower": false, "pct": false, "dec": null, "v": [685, null, 713, 861, 840, null]}, {"m": "Total Users", "t": "500", "ytd": "4K ▲25.5%", "lower": false, "pct": false, "dec": null, "v": [333, null, 274, 441, 288, null]}, {"m": "Sessions", "t": "—", "ytd": "5K ▲24.0%", "lower": false, "pct": false, "dec": null, "v": [430, null, 390, 571, 392, null]}, {"m": "Bounce Rate", "t": "≤50%", "ytd": "69.7%", "lower": true, "pct": true, "dec": null, "v": [71.6, null, 55.1, 68.8, 51.5, null]}]}, "search": {"caption": "Website visits from Google search — rolling (actuals)", "rows": [{"m": "Impressions", "t": "—", "ytd": "108.1K ▲404%", "lower": false, "pct": false, "dec": null, "v": [8500, null, 10400, 10900, 11800, null]}, {"m": "Clicks (visits)", "t": "—", "ytd": "2K ▲108%", "lower": false, "pct": false, "dec": null, "v": [163, null, 128, 142, 166, null]}, {"m": "Site CTR", "t": "≥5%", "ytd": "2.0%", "lower": false, "pct": true, "dec": null, "v": [1.9, null, 1.2, 1.3, 1.4, null]}, {"m": "Avg. Position", "t": "≤8", "ytd": "11.0", "lower": true, "pct": false, "dec": 1, "v": [8.6, null, 8.9, 8.2, 9.4, null]}]}, "linkedin": {"caption": "LinkedIn — rolling (actuals)", "rows": [{"m": "New Followers", "t": "—", "ytd": "198 ▼11.6%", "lower": false, "pct": false, "dec": null, "v": [9, null, 7, 11, 13, null]}, {"m": "Page Views", "t": "—", "ytd": "990 (12mo)", "lower": false, "pct": false, "dec": null, "v": [41, null, 59, 70, 55, null]}, {"m": "Unique Visitors", "t": "—", "ytd": "492 (12mo)", "lower": false, "pct": false, "dec": null, "v": [26, null, 33, 28, 29, null]}, {"m": "Impressions (K)", "t": "—", "ytd": "59K ▲106%", "lower": false, "pct": false, "dec": 1, "v": [3.0, null, 2.0, 3.0, 3.0, null]}, {"m": "Reactions", "t": "—", "ytd": "1,487 ▲69%", "lower": false, "pct": false, "dec": null, "v": [67, null, 54, 64, 106, null]}, {"m": "Comments", "t": "—", "ytd": "57 ▲78%", "lower": false, "pct": false, "dec": null, "v": [3, null, null, 1, 10, null]}, {"m": "Shares", "t": "—", "ytd": "38", "lower": false, "pct": false, "dec": null, "v": [3, null, 2, null, 1, null]}]}, "fha": {"caption": "FHA+ Intel Brief — monthly send (actuals)", "rows": [{"m": "Emails Sent", "t": "2,000", "ytd": "2,303", "lower": false, "pct": false, "dec": null, "v": [null, 507, 460, 453, 446, 437]}, {"m": "Delivered", "t": "—", "ytd": "2,262", "lower": false, "pct": false, "dec": null, "v": [null, 480, 455, 451, 442, 434]}, {"m": "Unique Opens", "t": "—", "ytd": "1,124", "lower": false, "pct": false, "dec": null, "v": [null, 302, 177, 203, 199, 243]}, {"m": "Open Rate", "t": "40%", "ytd": "—", "lower": false, "pct": true, "dec": null, "v": [null, 62.9, 38.9, 45.0, 45.0, 56.0]}, {"m": "Unique Clicks", "t": "100", "ytd": "591", "lower": false, "pct": false, "dec": null, "v": [null, 237, 40, 73, 77, 164]}, {"m": "Click Rate", "t": "—", "ytd": "—", "lower": false, "pct": true, "dec": null, "v": [null, 49.4, 8.8, 16.2, 17.4, 37.8]}, {"m": "Unsubscribes", "t": "≤2%", "ytd": "52", "lower": true, "pct": false, "dec": null, "v": [null, 30, 5, 11, 6, 0]}, {"m": "Bounces", "t": "—", "ytd": "39", "lower": true, "pct": false, "dec": null, "v": [null, 27, 4, 2, 3, 3]}]}}, "charts": {"top_queries": {"labels": ["mark ehrenreich", "brian montgomery", "gatehouse", "keith becker", "oppenheimer advised"], "data": [1417, 549, 181, 169, 108], "month": "June"}, "fha_page_channel": {"labels": ["LinkedIn", "Google Organic"], "data": [43, 27], "month": "June"}}, "funnel": {"month": "July 2", "sent": 437, "delivered": 434, "deliv_pct": "99.3", "opens": 243, "open_pct": "56", "clicks": 164, "note": "0 unsubs"}, "notes": "Website/Search/LinkedIn cover Feb, Apr, May, Jun. FHA+ sends cover Mar-Jul. Gaps: March website/LinkedIn report and February FHA+ send are not in the folders; July website/LinkedIn lands next month."};
+const MONTHS = D.MONTHS;
+document.getElementById("periodBadge").textContent = D.period_label;
+document.getElementById("statusNote").innerHTML = "<strong>All figures are actuals pulled from the report PDFs.</strong> " + D.notes + " Blank cells (&mdash;) are reports not yet in the folder.";
+
+function fmt(v,r){ if(v===null||v===undefined) return null;
+  if(r.pct) return v.toFixed(1)+"%";
+  if(r.dec!==null&&r.dec!==undefined) return v.toFixed(r.dec);
+  return v>=1000 ? v.toLocaleString() : (Number.isInteger(v)? v : v.toFixed(1)); }
+function latestIdx(v){ for(let i=v.length-1;i>=0;i--) if(v[i]!==null&&v[i]!==undefined) return i; return -1; }
+function buildTable(spec){
+  let h='<table><caption>'+spec.caption+'</caption><thead><tr><th>Metric</th><th>Target</th>';
+  MONTHS.forEach(m=> h+='<th>'+m+'</th>'); h+='<th>YTD*</th></tr></thead><tbody>';
+  spec.rows.forEach(r=>{ const now=latestIdx(r.v);
+    h+='<tr><td class="metric">'+r.m+'</td><td class="target">'+r.t+'</td>';
+    r.v.forEach((v,i)=>{ if(v===null||v===undefined){ h+='<td class="na">&mdash;</td>'; return; }
+      let prev=null; for(let k=i-1;k>=0;k--){ if(r.v[k]!==null&&r.v[k]!==undefined){prev=r.v[k];break;} }
+      let cls="",arrow="";
+      if(prev!==null){ const d=v-prev; if(d!==0){ const good=r.lower? d<0:d>0; cls=good?"cell-up":"cell-down"; arrow=' <span class="arrow">'+(d>0?"▲":"▼")+'</span>'; } }
+      if(i===now&&!cls) cls="now";
+      h+='<td class="'+cls+'">'+fmt(v,r)+arrow+'</td>'; });
+    h+='<td class="ytd">'+(r.ytd||"&mdash;")+'</td></tr>'; });
+  return h+'</tbody></table>';
+}
+function delta(cur,prev,lower){ if(prev===null||prev===undefined) return '<div class="delta flat">■ &mdash;</div>';
+  const d=cur-prev,p=prev?Math.abs(d/prev*100):0; const good=lower?d<0:d>0;
+  const cls=d===0?"flat":(good?"up":"down"); const ar=d>0?"▲":(d<0?"▼":"■");
+  return '<div class="delta '+cls+'">'+ar+' '+p.toFixed(0)+'% MoM</div>'; }
+document.getElementById("kpiCards").innerHTML = D.kpis.map(k=>
+  '<div class="card"><div class="label">'+k.label+'</div><div class="val">'+k.val+'</div><div class="mo">'+k.mo+' 2026</div>'+delta(k.val,k.prev,k.lower)+'</div>').join('');
+document.getElementById("tblWeb").innerHTML=buildTable(D.sections.web);
+document.getElementById("tblSearch").innerHTML=buildTable(D.sections.search);
+document.getElementById("tblLinkedIn").innerHTML=buildTable(D.sections.linkedin);
+document.getElementById("tblFHA").innerHTML=buildTable(D.sections.fha);
+
+const tickC="#6a7887",gridC="rgba(0,0,0,.07)",navy="#0D2240",blue="#1B5FA6",teal="#0F6E56";
+const base={responsive:true,maintainAspectRatio:false};
+function arr(sec,metric){ const r=D.sections[sec].rows.find(x=>x.m===metric); return r?r.v:MONTHS.map(()=>null); }
+
+new Chart(document.getElementById("chartWebTrend"),{type:"line",data:{labels:MONTHS,datasets:[
+  {label:"Views",data:arr("web","Views"),borderColor:blue,backgroundColor:"rgba(27,95,166,.10)",spanGaps:true,tension:.3,pointRadius:4,fill:true},
+  {label:"Sessions",data:arr("web","Sessions"),borderColor:teal,spanGaps:true,tension:.3,pointRadius:4}]},
+  options:{...base,plugins:{title:{display:true,text:"Website Traffic by Month"},legend:{position:"bottom"}},scales:{x:{grid:{display:false},ticks:{color:tickC}},y:{grid:{color:gridC},ticks:{color:tickC}}}}});
+
+new Chart(document.getElementById("chartSearchTrend"),{data:{labels:MONTHS,datasets:[
+  {type:"bar",label:"Impressions",data:arr("search","Impressions"),backgroundColor:"#B5D4F4",yAxisID:"y",borderRadius:3},
+  {type:"line",label:"Search Visits (clicks)",data:arr("search","Clicks (visits)"),borderColor:teal,spanGaps:true,tension:.3,pointRadius:4,yAxisID:"y1"}]},
+  options:{...base,plugins:{title:{display:true,text:"Google Search — Reach & Visits"},legend:{position:"bottom"}},scales:{x:{grid:{display:false},ticks:{color:tickC}},y:{position:"left",grid:{color:gridC},ticks:{color:tickC},title:{display:true,text:"Impressions"}},y1:{position:"right",grid:{display:false},ticks:{color:tickC},title:{display:true,text:"Visits"}}}}});
+
+new Chart(document.getElementById("chartQueries"),{type:"bar",data:{labels:D.charts.top_queries.labels,datasets:[{label:"Impressions",data:D.charts.top_queries.data,backgroundColor:blue,borderRadius:3}]},
+  options:{...base,indexAxis:"y",plugins:{title:{display:true,text:"Top Search Queries — "+D.charts.top_queries.month},legend:{display:false}},scales:{x:{grid:{color:gridC},ticks:{color:tickC}},y:{grid:{display:false},ticks:{color:tickC,font:{size:10}}}}}});
+
+const fhaMonths=MONTHS.filter(m=>{const r=D.sections.fha.rows[0].v[MONTHS.indexOf(m)]; return r!==null&&r!==undefined;});
+function fhaArr(metric){ const r=D.sections.fha.rows.find(x=>x.m===metric); return fhaMonths.map(m=>r.v[MONTHS.indexOf(m)]); }
+new Chart(document.getElementById("chartFHATrend"),{type:"bar",data:{labels:fhaMonths,datasets:[
+  {label:"Unique Opens",data:fhaArr("Unique Opens"),backgroundColor:blue,borderRadius:3},
+  {label:"Unique Clicks",data:fhaArr("Unique Clicks"),backgroundColor:teal,borderRadius:3}]},
+  options:{...base,plugins:{title:{display:true,text:"FHA+ Opens & Clicks by Send"},legend:{position:"bottom"}},scales:{x:{grid:{display:false},ticks:{color:tickC}},y:{grid:{color:gridC},ticks:{color:tickC}}}}});
+
+new Chart(document.getElementById("chartChannel"),{type:"bar",data:{labels:D.charts.fha_page_channel.labels,datasets:[{label:"FHA+ page views",data:D.charts.fha_page_channel.data,backgroundColor:[blue,teal],borderRadius:4}]},
+  options:{...base,plugins:{title:{display:true,text:"FHA+ Page Visits by Channel — "+D.charts.fha_page_channel.month},legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:tickC}},y:{grid:{color:gridC},ticks:{color:tickC}}}}});
+
+const F=D.funnel;
+document.getElementById("funnelTitle").textContent="Engagement Funnel — "+F.month+" send (latest)";
+document.getElementById("mmFunnel").textContent='flowchart TD\n'+
+  '  A["Sent<br/>'+F.sent+'"] --> B["Delivered<br/>'+F.delivered+' · '+F.deliv_pct+'%"]\n'+
+  '  B --> C["Unique Opens<br/>'+F.opens+' · '+F.open_pct+'%"]\n'+
+  '  C --> D["Unique Clicks<br/>'+F.clicks+' · '+F.note+'"]\n'+
+  '  classDef s fill:#B5D4F4,stroke:#1B5FA6,color:#0D2240;\n  classDef m fill:#1B5FA6,stroke:#0D2240,color:#fff;\n  classDef e fill:#0F6E56,stroke:#0a4d3c,color:#fff;\n  class A s; class B,C m; class D e;';
+document.getElementById("mmChannels").textContent='flowchart LR\n'+
+  '  G["Google / Web Search<br/>visits"] --> W{{"Website<br/>sessions"}}\n  L["LinkedIn"] --> W\n  N["NHC Newsletter"] --> W\n  Dr["Direct / Other"] --> W\n'+
+  '  W --> Fp["FHA+ Page"]\n  L -.-> Fp\n  G -.-> Fp\n  Fp --> S["FHA+ Subscribers"]\n'+
+  '  classDef src fill:#EBF2FA,stroke:#1B5FA6,color:#0D2240;\n  classDef hub fill:#0D2240,stroke:#0a1a33,color:#fff;\n  classDef out fill:#0F6E56,stroke:#0a4d3c,color:#fff;\n  class G,L,N,Dr src; class W,Fp hub; class S out;';
+mermaid.initialize({startOnLoad:false,theme:"base",securityLevel:"loose",flowchart:{useMaxWidth:true,htmlLabels:true,padding:12,nodeSpacing:48,rankSpacing:52},themeVariables:{fontSize:"14px"}});
+mermaid.run({querySelector:".mermaid"});
+</script>
+</body>
+</html>
