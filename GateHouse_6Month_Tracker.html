@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Social Analytics — 6-Month Rolling Tracker</title>
+<title>Marketing Analytics — 6-Month Rolling Tracker</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.min.js" integrity="sha384-yQ4mmBBT+vhTAwjFH0toJXNYJ6O4usWnt6EPIdWwrRvx2V/n5lXuDZQwQFeSFydF" crossorigin="anonymous"></script>
 <style>
@@ -12,10 +12,13 @@
 body { margin:0; background:#f4f6f8; color:#1a2330; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; font-size:14px; line-height:1.45; }
 .wrap { max-width:1080px; margin:0 auto; padding:24px 20px 60px; }
 header.top { border-bottom:3px solid var(--navy); padding-bottom:14px; margin-bottom:18px; }
-header.top h1 { margin:0 0 4px; font-size:22px; color:var(--navy); }
+header.top h1 { margin:0 0 4px; font-size:28px; color:var(--navy); letter-spacing:.2px; }
 header.top .sub { color:#5a6b7b; font-size:13px; }
 .badge { display:inline-block; background:var(--navy); color:#fff; font-size:11px; font-weight:600; padding:2px 9px; border-radius:20px; vertical-align:middle; margin-left:8px; }
-h2.section { font-size:15px; text-transform:uppercase; letter-spacing:.6px; color:var(--navy); margin:32px 0 12px; padding-bottom:6px; border-bottom:1px solid #d5dde5; }
+.sec { background:#fff; border:1px solid #dbe3ec; border-radius:12px; margin:26px 0; padding-bottom:22px; box-shadow:0 3px 16px rgba(13,34,64,.08); overflow:hidden; }
+.sec > :not(.section) { margin-left:22px; margin-right:22px; }
+h2.section { font-size:22px; font-weight:700; letter-spacing:.2px; color:#fff; background:linear-gradient(90deg,var(--navy) 0%,#1b4f86 100%); margin:0 0 18px; padding:15px 22px; display:flex; align-items:center; gap:10px; }
+h2.section::before { content:""; width:6px; height:22px; background:var(--amber); border-radius:3px; display:inline-block; }
 .note { background:#eef4fa; border-left:3px solid var(--blue); padding:10px 14px; border-radius:4px; color:#3a4b5a; font-size:12.5px; margin:6px 0 18px; }
 .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:8px; }
 .card { background:#fff; border:1px solid #e2e8ee; border-radius:8px; padding:14px 16px; box-shadow:0 1px 2px rgba(0,0,0,.03); }
@@ -54,57 +57,82 @@ footer { margin-top:40px; color:#8593a1; font-size:11.5px; text-align:center; }
 <div class="wrap">
   <a class="backlink" href="index.html">&larr; All Engagement Reports</a>
   <header class="top">
-    <h1>Social Analytics — 6-Month Rolling Tracker <span class="badge" id="periodBadge"></span></h1>
+    <h1>Marketing Analytics — 6-Month Rolling Tracker <span class="badge" id="periodBadge"></span></h1>
     <div class="sub">Trend companion to the monthly Gate House Engagement Report · built from the Website &amp; FHA+ report files · US traffic only</div>
   </header>
   <div class="note" id="statusNote"></div>
-  <h2 class="section">At a Glance — Latest Actuals</h2>
-  <div class="cards" id="kpiCards"></div>
-  <h2 class="section">Website Traffic — Google Analytics</h2>
-  <div id="tblWeb"></div>
-  <div class="chart-box" style="margin-top:14px;"><canvas id="chartWebTrend"></canvas></div>
-  <h2 class="section">Top Landing Pages — Where Visitors Enter</h2>
-  <div class="note" style="margin-top:0;">Main site pages first (so the running total stays consistent month to month), then the notable <strong>sub-pages</strong> that moved. Same three metrics as the report: Page Views, New Users, Bounce Rate. Pages without a value need Jeff's per-page GA export.</div>
-  <div class="grid2">
-    <div id="tblLandingMain"></div>
-    <div id="tblLandingSub"></div>
-  </div>
-  <div id="landingExampleWrap" style="margin-top:16px;"></div>
-  <h2 class="section">Website Visits via Google / Web Search — Search Console</h2>
-  <div class="note" style="margin-top:0;">The <strong>"visits through Google/web searches"</strong> cut: <strong>Clicks = visits</strong> arriving from Google organic results. Impressions = reach; CTR &amp; Avg. Position = search health (position target &le;8).</div>
-  <div id="tblSearch"></div>
-  <div class="grid2" style="margin-top:14px;">
-    <div class="chart-box"><canvas id="chartSearchTrend"></canvas></div>
-    <div class="chart-box"><canvas id="chartQueries"></canvas></div>
-  </div>
-  <div class="legend-row">Left: Google search visits (clicks) &amp; impressions by month. Right: top search queries driving impressions.</div>
-  <h2 class="section">SEO Keyword Rankings — Semrush</h2>
-  <div class="note" id="seoNote" style="margin-top:0;"></div>
-  <div class="cards" id="seoCards"></div>
-  <div id="tblSeo" style="margin-top:8px;"></div>
-  <h2 class="section">LinkedIn — Growth &amp; Cadence</h2>
-  <div id="tblLinkedIn"></div>
-  <div class="note" style="margin-top:10px;"><strong>Total Followers</strong> needs the absolute count from Jeff's/Emily's LinkedIn export (reports only give <em>new</em> followers). <strong>Posts Published</strong> is tracked prominently here — continuity matters; June hit 17 (~4/wk), at the 16+ target.</div>
-  <div id="tblPosts"></div>
-  <h2 class="section">FHA+ Intel Brief — Monthly Send</h2>
-  <div id="tblFHA"></div>
-  <div class="grid2" style="margin-top:14px;">
-    <div class="chart-box"><canvas id="chartFHATrend"></canvas></div>
-    <div class="diagram-box"><div style="font-weight:700;color:#16334d;margin-bottom:8px;" id="funnelTitle"></div><pre class="mermaid" id="mmFunnel"></pre></div>
-  </div>
-  <div class="legend-row">Left: FHA+ unique opens &amp; clicks by send. Right: latest-send email funnel. Unusually high click counts usually mean link-scanner inflation — watch for it.</div>
-  <h2 class="section">Where Website Visits Come From — by Source</h2>
-  <div class="note" style="margin-top:0;">FHA+ is a driver <em>to</em> the website. Tracks website visits by acquisition source: <strong>FHA+ Newsletter, NHC Newsletter, LinkedIn, Google/Web Search, Direct/Other</strong>. Google/Web Search is live from Search Console; the newsletter, LinkedIn &amp; direct rows need UTM-tagged session data (Jeff's GA UTM report) to fill.</div>
-  <div id="tblVisits"></div>
-  <div class="grid2" style="margin-top:14px;">
-    <div class="chart-box"><canvas id="chartVisits"></canvas></div>
-    <div class="diagram-box"><pre class="mermaid" id="mmChannels"></pre></div>
-  </div>
-  <div class="legend-row">Left: website visits by source across the rolling window (stacked; fills in as UTM data is added). Right: the five sources feeding the website.</div>
+
+  <section class="sec">
+    <h2 class="section">At a Glance — Latest Actuals</h2>
+    <div class="cards" id="kpiCards"></div>
+  </section>
+
+  <section class="sec">
+    <h2 class="section">Where Website Visits Come From — by Source</h2>
+    <div class="note" style="margin-top:0;">FHA+ is a driver <em>to</em> the website. Website visits by acquisition source (GA first-user source/medium), full Feb–Jul: <strong>FHA+ Newsletter</strong> = ActiveCampaign email, <strong>NHC Newsletter</strong> = nhc email (from July), <strong>LinkedIn</strong> = social, <strong>Google/Web Search</strong> = organic, <strong>Direct/Other</strong>. Minor engines/referrals (Bing, Yahoo, DuckDuckGo, etc.) aren't broken out separately.</div>
+    <div id="tblVisits"></div>
+    <div class="grid2" style="margin-top:14px;">
+      <div class="chart-box"><canvas id="chartVisits"></canvas></div>
+      <div class="diagram-box"><pre class="mermaid" id="mmChannels"></pre></div>
+    </div>
+    <div class="legend-row">Left: website visits by source across the rolling window (stacked; fills in as UTM data is added). Right: the five sources feeding the website.</div>
+  </section>
+
+  <section class="sec">
+    <h2 class="section">Website Traffic — Google Analytics</h2>
+    <div id="tblWeb"></div>
+    <div class="chart-box" style="margin-top:14px;"><canvas id="chartWebTrend"></canvas></div>
+  </section>
+
+  <section class="sec">
+    <h2 class="section">Top Landing Pages — Where Visitors Enter</h2>
+    <div class="note" style="margin-top:0;">Main site pages first (so the running total stays consistent month to month), then the notable <strong>sub-pages</strong> that moved. Same three metrics as the report: Page Views, New Users, Bounce Rate. Pages without a value need Jeff's per-page GA export.</div>
+    <div class="grid2">
+      <div id="tblLandingMain"></div>
+      <div id="tblLandingSub"></div>
+    </div>
+    <div id="landingExampleWrap" style="margin-top:16px;"></div>
+  </section>
+
+  <section class="sec">
+    <h2 class="section">Website Visits via Google / Web Search — Search Console</h2>
+    <div class="note" style="margin-top:0;">The <strong>"visits through Google/web searches"</strong> cut: <strong>Clicks = visits</strong> arriving from Google organic results. Impressions = reach; CTR &amp; Avg. Position = search health (position target &le;8).</div>
+    <div id="tblSearch"></div>
+    <div class="grid2" style="margin-top:14px;">
+      <div class="chart-box"><canvas id="chartSearchTrend"></canvas></div>
+      <div class="chart-box"><canvas id="chartQueries"></canvas></div>
+    </div>
+    <div class="legend-row">Left: Google search visits (clicks) &amp; impressions by month. Right: top search queries driving impressions.</div>
+  </section>
+
+  <section class="sec">
+    <h2 class="section">SEO Keyword Rankings — Semrush</h2>
+    <div class="note" id="seoNote" style="margin-top:0;"></div>
+    <div class="cards" id="seoCards"></div>
+    <div id="tblSeo" style="margin-top:8px;"></div>
+  </section>
+
+  <section class="sec">
+    <h2 class="section">FHA+ Intel Brief — Monthly Send</h2>
+    <div id="tblFHA"></div>
+    <div class="grid2" style="margin-top:14px;">
+      <div class="chart-box"><canvas id="chartFHATrend"></canvas></div>
+      <div class="diagram-box"><div style="font-weight:700;color:#16334d;margin-bottom:8px;" id="funnelTitle"></div><pre class="mermaid" id="mmFunnel"></pre></div>
+    </div>
+    <div class="legend-row">Left: FHA+ unique opens &amp; clicks by send. Right: latest-send email funnel. Unusually high click counts usually mean link-scanner inflation — watch for it.</div>
+  </section>
+
+  <section class="sec">
+    <h2 class="section">LinkedIn — Growth &amp; Cadence</h2>
+    <div id="tblLinkedIn"></div>
+    <div class="note" style="margin-top:10px;"><strong>Total Followers</strong> is seeded at 982 (current snapshot) to start the rolling count — monthly follower reporting is being set up. <strong>Posts Published</strong> is tracked prominently here — continuity matters; June hit 17 (~4/wk), at the 16+ target.</div>
+    <div id="tblPosts"></div>
+  </section>
+
   <footer>Gate House Strategies · Confidential — Partner Use Only · Source: Website Reports &amp; FHA+ Reports PDFs · YTD* = report trailing-12 (web/search/LinkedIn) or send totals (FHA+)</footer>
 </div>
 <script>
-const D = {"MONTHS": ["Feb", "Mar", "Apr", "May", "Jun", "Jul"], "period_label": "FEB – JUL 2026", "kpis": [{"label": "Website Sessions", "mo": "Jun", "val": 392, "prev": 571}, {"label": "Google Search Visits", "mo": "Jun", "val": 166, "prev": 142}, {"label": "LinkedIn Reactions", "mo": "Jun", "val": 106, "prev": 64}, {"label": "LinkedIn Posts", "mo": "Jun", "val": 17, "prev": null}, {"label": "FHA+ Unique Clicks", "mo": "Jul", "val": 164, "prev": 77}, {"label": "FHA+ Unsubscribes", "mo": "Jul", "val": 0, "prev": 6, "lower": true}], "sections": {"web": {"caption": "Website traffic — rolling (actuals)", "rows": [{"m": "Views", "t": "1,000", "ytd": "10K ▲21.9%", "lower": false, "pct": false, "dec": null, "v": [2000, null, 713, 861, 840, null]}, {"m": "Total Users", "t": "500", "ytd": "4K ▲25.5%", "lower": false, "pct": false, "dec": null, "v": [408, null, 274, 441, 288, null]}, {"m": "Sessions", "t": "—", "ytd": "5K ▲24.0%", "lower": false, "pct": false, "dec": null, "v": [627, null, 390, 571, 392, null]}, {"m": "Bounce Rate", "t": "≤50%", "ytd": "69.7%", "lower": true, "pct": true, "dec": null, "v": [61.6, null, 55.1, 68.8, 51.5, null]}]}, "search": {"caption": "Website visits from Google search — rolling (actuals)", "rows": [{"m": "Impressions", "t": "—", "ytd": "108.1K ▲404%", "lower": false, "pct": false, "dec": null, "v": [8500, null, 10400, 10900, 11800, null]}, {"m": "Clicks (visits)", "t": "—", "ytd": "2K ▲108%", "lower": false, "pct": false, "dec": null, "v": [163, null, 128, 142, 166, null]}, {"m": "Site CTR", "t": "≥5%", "ytd": "2.0%", "lower": false, "pct": true, "dec": null, "v": [1.9, null, 1.2, 1.3, 1.4, null]}, {"m": "Avg. Position", "t": "≤8", "ytd": "11.0", "lower": true, "pct": false, "dec": 1, "v": [8.6, null, 8.9, 8.2, 9.4, null]}]}, "linkedin": {"caption": "LinkedIn — rolling (actuals)", "rows": [{"m": "Total Followers", "t": "3,000", "ytd": "—", "lower": false, "pct": false, "dec": null, "v": [null, null, null, null, null, null]}, {"m": "New Followers", "t": "—", "ytd": "198 ▼11.6%", "lower": false, "pct": false, "dec": null, "v": [9, null, 7, 11, 13, null]}, {"m": "Posts Published", "t": "16+", "ytd": "avg ~4/wk", "lower": false, "pct": false, "dec": null, "v": [null, null, null, null, 17, null]}, {"m": "Avg / Week", "t": "4–5", "ytd": "—", "lower": false, "pct": false, "dec": 1, "v": [null, null, null, null, 4, null]}, {"m": "Page Views", "t": "—", "ytd": "990 (12mo)", "lower": false, "pct": false, "dec": null, "v": [41, null, 59, 70, 55, null]}, {"m": "Unique Visitors", "t": "—", "ytd": "492 (12mo)", "lower": false, "pct": false, "dec": null, "v": [26, null, 33, 28, 29, null]}, {"m": "Impressions (K)", "t": "—", "ytd": "59K ▲106%", "lower": false, "pct": false, "dec": 1, "v": [3.0, null, 2.0, 3.0, 3.0, null]}, {"m": "Reactions", "t": "—", "ytd": "1,487 ▲69%", "lower": false, "pct": false, "dec": null, "v": [67, null, 54, 64, 106, null]}, {"m": "Comments", "t": "—", "ytd": "57 ▲78%", "lower": false, "pct": false, "dec": null, "v": [3, null, null, 1, 10, null]}, {"m": "Shares", "t": "—", "ytd": "38", "lower": false, "pct": false, "dec": null, "v": [3, null, 2, null, 1, null]}]}, "fha": {"caption": "FHA+ Intel Brief — monthly send (actuals)", "rows": [{"m": "Emails Sent", "t": "2,000", "ytd": "2,303", "lower": false, "pct": false, "dec": null, "v": [null, 507, 460, 453, 446, 437]}, {"m": "Delivered", "t": "—", "ytd": "2,262", "lower": false, "pct": false, "dec": null, "v": [null, 480, 455, 451, 442, 434]}, {"m": "Unique Opens", "t": "—", "ytd": "1,124", "lower": false, "pct": false, "dec": null, "v": [null, 302, 177, 203, 199, 243]}, {"m": "Open Rate", "t": "40%", "ytd": "—", "lower": false, "pct": true, "dec": null, "v": [null, 62.9, 38.9, 45.0, 45.0, 56.0]}, {"m": "Unique Clicks", "t": "100", "ytd": "591", "lower": false, "pct": false, "dec": null, "v": [null, 237, 40, 73, 77, 164]}, {"m": "Click Rate", "t": "—", "ytd": "—", "lower": false, "pct": true, "dec": null, "v": [null, 49.4, 8.8, 16.2, 17.4, 37.8]}, {"m": "Unsubscribes", "t": "≤2%", "ytd": "52", "lower": true, "pct": false, "dec": null, "v": [null, 30, 5, 11, 6, 0]}, {"m": "Bounces", "t": "—", "ytd": "39", "lower": true, "pct": false, "dec": null, "v": [null, 27, 4, 2, 3, 3]}]}, "visits": {"caption": "Website visits by source — rolling", "rows": [{"m": "FHA+ Newsletter", "t": "—", "ytd": "—", "lower": false, "pct": false, "dec": null, "v": [null, null, null, null, null, null]}, {"m": "NHC Newsletter", "t": "—", "ytd": "—", "lower": false, "pct": false, "dec": null, "v": [null, null, null, null, null, null]}, {"m": "LinkedIn", "t": "—", "ytd": "—", "lower": false, "pct": false, "dec": null, "v": [null, null, null, null, null, null]}, {"m": "Google / Web Search", "t": "—", "ytd": "2K ▲108%", "lower": false, "pct": false, "dec": null, "v": [163, null, 128, 142, 166, null]}, {"m": "Direct / Other", "t": "—", "ytd": "—", "lower": false, "pct": false, "dec": null, "v": [null, null, null, null, null, null]}]}}, "charts": {"top_queries": {"labels": ["mark ehrenreich", "brian montgomery", "gatehouse", "keith becker", "oppenheimer advised"], "data": [1417, 549, 181, 169, 108], "month": "June"}, "fha_page_channel": {"labels": ["LinkedIn", "Google Organic"], "data": [43, 27], "month": "June"}}, "funnel": {"month": "July 2", "sent": 437, "delivered": 434, "deliv_pct": "99.3", "opens": 243, "open_pct": "56", "clicks": 164, "note": "0 unsubs"}, "landing": {"month": "June", "cols": ["Page Views", "New Users", "Bounce Rate"], "main": [{"page": "Home", "pv": 359, "nu": 88, "br": 37.2}, {"page": "Strategies", "pv": null, "nu": null, "br": null}, {"page": "Compliance", "pv": null, "nu": null, "br": null}, {"page": "Litigation", "pv": null, "nu": null, "br": null}, {"page": "Meet Our Team", "pv": null, "nu": null, "br": null}, {"page": "FHA+ (all pages)", "pv": 156, "nu": 29, "br": 43.5}], "sub": [{"page": "/teamate/brian-montgomery", "pv": 63, "nu": 28, "br": 62.2}, {"page": "/fha-plus/may-2026", "pv": 94, "nu": 5, "br": 30.0}, {"page": "/fha-plus/june-2026", "pv": 62, "nu": 24, "br": 63.9}, {"page": "/about", "pv": 52, "nu": 16, "br": 46.9}]}, "landing_example": {"title": "February Drill-Down — New GA4 Format (example)", "note": "Sample of the richer per-page drill-down Jeff can supply each month: entry page with bounce, new users, sessions, and engaged sessions. Shown as a format preview alongside the June top-5 above.", "rows": [{"page": "/ (home)", "views": 355, "br": 51.56, "nu": 148, "sess": 192, "eng": 93}, {"page": "/fha-plus", "views": 84, "br": 93.59, "nu": 73, "sess": 78, "eng": 5}, {"page": "/about", "views": 78, "br": 80.95, "nu": 2, "sess": 42, "eng": 8}, {"page": "/tag/housing-policy", "views": 27, "br": 0.0, "nu": 1, "sess": 2, "eng": 2}, {"page": "/teamate/brian-montgomery", "views": 19, "br": 85.71, "nu": 10, "sess": 14, "eng": 2}, {"page": "/blog", "views": 19, "br": 85.71, "nu": 2, "sess": 7, "eng": 1}, {"page": "/contact-us", "views": 14, "br": 87.5, "nu": 0, "sess": 8, "eng": 1}, {"page": "/teamate/michael-waldron", "views": 12, "br": 75.0, "nu": 4, "sess": 4, "eng": 1}]}, "seo": {"generated": "Jul 31, 2026", "period": "Jul 25–31, 2026", "tracked": 138, "visibility": "0%", "top3": 0, "top10": 0, "top20": 0, "top100": 0, "opportunities": [{"kw": "regulatory compliance", "vol": 9900, "kd": 50}, {"kw": "compliance training", "vol": 4400, "kd": 54}, {"kw": "vendor risk management", "vol": 2400, "kd": 39}, {"kw": "regulatory compliance consulting", "vol": 1600, "kd": 24}, {"kw": "compliance consulting", "vol": 1300, "kd": 29}, {"kw": "risk management consulting", "vol": 1000, "kd": 35}, {"kw": "compliance risk management", "vol": 1000, "kd": 19}, {"kw": "risk consulting", "vol": 880, "kd": 51}, {"kw": "fintech consulting", "vol": 720, "kd": 28}, {"kw": "corporate risk management", "vol": 590, "kd": 41}, {"kw": "regulatory risk management", "vol": 390, "kd": 22}, {"kw": "mortgage compliance", "vol": 320, "kd": 22}]}, "posts": {"caption": "Top Posts by Impressions — June (rolling; grows toward a top-50)", "rows": [{"post": "Gate House — 5-year anniversary", "impr": 632, "eng": 10.28, "react": 34}, {"post": "FHA Connection — SUA auto-assign", "impr": 298, "eng": 2.68, "react": 6}, {"post": "MBA Senior Mortgage Solutions", "impr": 241, "eng": 4.56, "react": 3}, {"post": "Brian Montgomery at Fannie Mae event", "impr": 238, "eng": 12.61, "react": 13}, {"post": "FHA child support screening", "impr": 221, "eng": 3.62, "react": 5}, {"post": "Appraisal modernization — FHA/VA/GSE", "impr": 214, "eng": 6.54, "react": 10}, {"post": "Berkshire Hathaway / Taylor Morrison", "impr": 186, "eng": 2.69, "react": 4}, {"post": "VA Partial Claim Program", "impr": 182, "eng": 3.85, "react": 5}, {"post": "Mortgage rate lock-in / HELOCs", "impr": 178, "eng": 4.49, "react": 3}, {"post": "Digital assets & FHA+ (3 Questions)", "impr": 176, "eng": 2.84, "react": 3}]}, "notes": "Website/Search/LinkedIn cover Feb, Apr, May, Jun. FHA+ sends cover Mar-Jul. February website reflects the updated re-pulled analytics file (2,000 views / 408 users / 627 sessions). Gaps: March website/LinkedIn report and February FHA+ send are not in the folders; July website/LinkedIn lands next month."};
+const D = {"MONTHS": ["Feb", "Mar", "Apr", "May", "Jun", "Jul"], "period_label": "FEB – JUL 2026", "kpis": [{"label": "Website Sessions", "mo": "Jul", "val": 789, "prev": 372}, {"label": "Google Search Visits", "mo": "Jul", "val": 186, "prev": 176}, {"label": "LinkedIn Reactions", "mo": "Jun", "val": 106, "prev": 64}, {"label": "LinkedIn Posts", "mo": "Jun", "val": 17, "prev": null}, {"label": "FHA+ Unique Clicks", "mo": "Jul", "val": 164, "prev": 77}, {"label": "FHA+ Unsubscribes", "mo": "Jul", "val": 0, "prev": 6, "lower": true}], "sections": {"web": {"caption": "Website traffic — rolling (actuals)", "rows": [{"m": "Views", "t": "1,000", "ytd": "7,381", "lower": false, "pct": false, "dec": null, "v": [638, 2265, 635, 860, 775, 1519]}, {"m": "Total Users", "t": "500", "ytd": "3,084", "lower": false, "pct": false, "dec": null, "v": [318, 962, 273, 440, 283, 619]}, {"m": "Sessions", "t": "—", "ytd": "4,077", "lower": false, "pct": false, "dec": null, "v": [413, 1158, 386, 570, 372, 789]}, {"m": "Bounce Rate", "t": "≤50%", "ytd": "62.96%", "lower": true, "pct": true, "dec": null, "v": [72.15, 65.63, 55.18, 68.77, 52.69, 54.25]}]}, "search": {"caption": "Website visits from Google search — rolling (actuals)", "rows": [{"m": "Impressions", "t": "—", "ytd": "101,225", "lower": false, "pct": false, "dec": null, "v": [12702, 17318, 13861, 15174, 14295, 12534]}, {"m": "Clicks (visits)", "t": "—", "ytd": "1,226", "lower": false, "pct": false, "dec": null, "v": [170, 185, 139, 147, 176, 186]}, {"m": "Site CTR", "t": "≥5%", "ytd": "1.21%", "lower": false, "pct": true, "dec": null, "v": [1.34, 1.07, 1.0, 0.97, 1.23, 1.48]}, {"m": "Avg. Position", "t": "≤8", "ytd": "9.27", "lower": true, "pct": false, "dec": 1, "v": [8.69, 8.79, 10.5, 10.19, 9.21, 8.82]}]}, "linkedin": {"caption": "LinkedIn — rolling (actuals)", "rows": [{"m": "Total Followers", "t": "3,000", "ytd": "982 now", "lower": false, "pct": false, "dec": null, "v": [null, null, null, null, 982, null]}, {"m": "New Followers", "t": "—", "ytd": "198 ▼11.6%", "lower": false, "pct": false, "dec": null, "v": [9, null, 7, 11, 13, null]}, {"m": "Posts Published", "t": "16+", "ytd": "avg ~4/wk", "lower": false, "pct": false, "dec": null, "v": [null, null, null, null, 17, null]}, {"m": "Avg / Week", "t": "4–5", "ytd": "—", "lower": false, "pct": false, "dec": 1, "v": [null, null, null, null, 4, null]}, {"m": "Page Views", "t": "—", "ytd": "990 (12mo)", "lower": false, "pct": false, "dec": null, "v": [41, null, 59, 70, 55, null]}, {"m": "Unique Visitors", "t": "—", "ytd": "492 (12mo)", "lower": false, "pct": false, "dec": null, "v": [26, null, 33, 28, 29, null]}, {"m": "Impressions (K)", "t": "—", "ytd": "59K ▲106%", "lower": false, "pct": false, "dec": 1, "v": [3.0, null, 2.0, 3.0, 3.0, null]}, {"m": "Reactions", "t": "—", "ytd": "1,487 ▲69%", "lower": false, "pct": false, "dec": null, "v": [67, null, 54, 64, 106, null]}, {"m": "Comments", "t": "—", "ytd": "57 ▲78%", "lower": false, "pct": false, "dec": null, "v": [3, null, null, 1, 10, null]}, {"m": "Shares", "t": "—", "ytd": "38", "lower": false, "pct": false, "dec": null, "v": [3, null, 2, null, 1, null]}]}, "fha": {"caption": "FHA+ Intel Brief — monthly send (actuals)", "rows": [{"m": "Emails Sent", "t": "2,000", "ytd": "2,303", "lower": false, "pct": false, "dec": null, "v": [null, 507, 460, 453, 446, 437]}, {"m": "Delivered", "t": "—", "ytd": "2,262", "lower": false, "pct": false, "dec": null, "v": [null, 480, 455, 451, 442, 434]}, {"m": "Unique Opens", "t": "—", "ytd": "1,124", "lower": false, "pct": false, "dec": null, "v": [null, 302, 177, 203, 199, 243]}, {"m": "Open Rate", "t": "40%", "ytd": "—", "lower": false, "pct": true, "dec": null, "v": [null, 62.9, 38.9, 45.0, 45.0, 56.0]}, {"m": "Unique Clicks", "t": "100", "ytd": "591", "lower": false, "pct": false, "dec": null, "v": [null, 237, 40, 73, 77, 164]}, {"m": "Click Rate", "t": "—", "ytd": "—", "lower": false, "pct": true, "dec": null, "v": [null, 49.4, 8.8, 16.2, 17.4, 37.8]}, {"m": "Unsubscribes", "t": "≤2%", "ytd": "52", "lower": true, "pct": false, "dec": null, "v": [null, 30, 5, 11, 6, 0]}, {"m": "Bounces", "t": "—", "ytd": "39", "lower": true, "pct": false, "dec": null, "v": [null, 27, 4, 2, 3, 3]}]}, "visits": {"caption": "Website visits by source — rolling", "rows": [{"m": "FHA+ Newsletter", "t": "—", "ytd": "2,112", "lower": false, "pct": false, "dec": null, "v": [null, 1293, 39, 213, 14, 553]}, {"m": "NHC Newsletter", "t": "—", "ytd": "22", "lower": false, "pct": false, "dec": null, "v": [null, null, null, null, null, 18]}, {"m": "LinkedIn", "t": "—", "ytd": "241", "lower": false, "pct": false, "dec": null, "v": [14, 35, 26, 43, 10, 66]}, {"m": "Google / Web Search", "t": "—", "ytd": "2,743", "lower": false, "pct": false, "dec": null, "v": [230, 473, 329, 427, 494, 568]}, {"m": "Direct / Other", "t": "—", "ytd": "1,956", "lower": false, "pct": false, "dec": null, "v": [364, 390, 187, 155, 201, 275]}]}}, "charts": {"top_queries": {"labels": ["mark ehrenreich", "brian montgomery", "gatehouse", "keith becker", "oppenheimer advised"], "data": [1417, 549, 181, 169, 108], "month": "June"}, "fha_page_channel": {"labels": ["LinkedIn", "Google Organic"], "data": [43, 27], "month": "June"}}, "funnel": {"month": "July 2", "sent": 437, "delivered": 434, "deliv_pct": "99.3", "opens": 243, "open_pct": "56", "clicks": 164, "note": "0 unsubs"}, "landing": {"month": "June", "cols": ["Page Views", "New Users", "Bounce Rate"], "main": [{"page": "Home", "pv": 359, "nu": 88, "br": 37.2}, {"page": "Strategies", "pv": null, "nu": null, "br": null}, {"page": "Compliance", "pv": null, "nu": null, "br": null}, {"page": "Litigation", "pv": null, "nu": null, "br": null}, {"page": "Meet Our Team", "pv": null, "nu": null, "br": null}, {"page": "FHA+ (all pages)", "pv": 156, "nu": 29, "br": 43.5}], "sub": [{"page": "/teamate/brian-montgomery", "pv": 63, "nu": 28, "br": 62.2}, {"page": "/fha-plus/may-2026", "pv": 94, "nu": 5, "br": 30.0}, {"page": "/fha-plus/june-2026", "pv": 62, "nu": 24, "br": 63.9}, {"page": "/about", "pv": 52, "nu": 16, "br": 46.9}]}, "landing_example": {"title": "February Drill-Down — New GA4 Format (example)", "note": "Sample of the richer per-page drill-down Jeff can supply each month: entry page with bounce, new users, sessions, and engaged sessions. Shown as a format preview alongside the June top-5 above.", "rows": [{"page": "/ (home)", "views": 355, "br": 51.56, "nu": 148, "sess": 192, "eng": 93}, {"page": "/fha-plus", "views": 84, "br": 93.59, "nu": 73, "sess": 78, "eng": 5}, {"page": "/about", "views": 78, "br": 80.95, "nu": 2, "sess": 42, "eng": 8}, {"page": "/tag/housing-policy", "views": 27, "br": 0.0, "nu": 1, "sess": 2, "eng": 2}, {"page": "/teamate/brian-montgomery", "views": 19, "br": 85.71, "nu": 10, "sess": 14, "eng": 2}, {"page": "/blog", "views": 19, "br": 85.71, "nu": 2, "sess": 7, "eng": 1}, {"page": "/contact-us", "views": 14, "br": 87.5, "nu": 0, "sess": 8, "eng": 1}, {"page": "/teamate/michael-waldron", "views": 12, "br": 75.0, "nu": 4, "sess": 4, "eng": 1}]}, "seo": {"generated": "Jul 31, 2026", "period": "Jul 25–31, 2026", "tracked": 138, "visibility": "0%", "top3": 0, "top10": 0, "top20": 0, "top100": 0, "opportunities": [{"kw": "regulatory compliance", "vol": 9900, "kd": 50}, {"kw": "compliance training", "vol": 4400, "kd": 54}, {"kw": "vendor risk management", "vol": 2400, "kd": 39}, {"kw": "regulatory compliance consulting", "vol": 1600, "kd": 24}, {"kw": "compliance consulting", "vol": 1300, "kd": 29}, {"kw": "risk management consulting", "vol": 1000, "kd": 35}, {"kw": "compliance risk management", "vol": 1000, "kd": 19}, {"kw": "risk consulting", "vol": 880, "kd": 51}, {"kw": "fintech consulting", "vol": 720, "kd": 28}, {"kw": "corporate risk management", "vol": 590, "kd": 41}, {"kw": "regulatory risk management", "vol": 390, "kd": 22}, {"kw": "mortgage compliance", "vol": 320, "kd": 22}]}, "posts": {"caption": "Top Posts by Impressions — June (rolling; grows toward a top-50)", "rows": [{"post": "Gate House — 5-year anniversary", "impr": 632, "eng": 10.28, "react": 34}, {"post": "FHA Connection — SUA auto-assign", "impr": 298, "eng": 2.68, "react": 6}, {"post": "MBA Senior Mortgage Solutions", "impr": 241, "eng": 4.56, "react": 3}, {"post": "Brian Montgomery at Fannie Mae event", "impr": 238, "eng": 12.61, "react": 13}, {"post": "FHA child support screening", "impr": 221, "eng": 3.62, "react": 5}, {"post": "Appraisal modernization — FHA/VA/GSE", "impr": 214, "eng": 6.54, "react": 10}, {"post": "Berkshire Hathaway / Taylor Morrison", "impr": 186, "eng": 2.69, "react": 4}, {"post": "VA Partial Claim Program", "impr": 182, "eng": 3.85, "react": 5}, {"post": "Mortgage rate lock-in / HELOCs", "impr": 178, "eng": 4.49, "react": 3}, {"post": "Digital assets & FHA+ (3 Questions)", "impr": 176, "eng": 2.84, "react": 3}]}, "notes": "Website &amp; Search now cover the full Feb–Jul from the consolidated YTD export (this corrected February to 638 views — the ~2,265 spike was March, not February). Website visits by source are populated for July (all five channels) from GA source/medium; earlier months fill as monthly source breakdowns are exported. FHA+ sends cover Mar–Jul. LinkedIn metrics run through June; Total Followers seeded at 982."};
 const MONTHS = D.MONTHS;
 document.getElementById("periodBadge").textContent = D.period_label;
 document.getElementById("statusNote").innerHTML = "<strong>All figures are actuals pulled from the report PDFs.</strong> " + D.notes + " Blank cells (&mdash;) are reports not yet in the folder.";
@@ -229,7 +257,7 @@ document.getElementById("mmFunnel").textContent='flowchart TD\n'+
   '  C --> D["Unique Clicks<br/>'+F.clicks+' · '+F.note+'"]\n'+
   '  classDef s fill:#B5D4F4,stroke:#1B5FA6,color:#0D2240;\n  classDef m fill:#1B5FA6,stroke:#0D2240,color:#fff;\n  classDef e fill:#0F6E56,stroke:#0a4d3c,color:#fff;\n  class A s; class B,C m; class D e;';
 document.getElementById("mmChannels").textContent='flowchart LR\n'+
-  '  A["FHA+ Newsletter"] --> W{{"Website<br/>sessions"}}\n  B["NHC Newsletter"] --> W\n  C["LinkedIn"] --> W\n  G["Google / Web Search"] --> W\n  Dr["Direct / Other"] --> W\n'+
+  '  A["FHA+ Newsletter<br/>553"] --> W{{"Website<br/>1,519 views (Jul)"}}\n  B["NHC Newsletter<br/>18"] --> W\n  C["LinkedIn<br/>66"] --> W\n  G["Google / Web Search<br/>568"] --> W\n  Dr["Direct / Other<br/>275"] --> W\n'+
   '  classDef src fill:#EBF2FA,stroke:#1B5FA6,color:#0D2240;\n  classDef hub fill:#0D2240,stroke:#0a1a33,color:#fff;\n  class A,B,C,G,Dr src; class W hub;';
 mermaid.initialize({startOnLoad:false,theme:"base",securityLevel:"loose",flowchart:{useMaxWidth:true,htmlLabels:true,padding:12,nodeSpacing:48,rankSpacing:52},themeVariables:{fontSize:"14px"}});
 mermaid.run({querySelector:".mermaid"});
